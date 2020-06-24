@@ -9,17 +9,56 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST" id="user_form">
-        {{ form.hidden_tag() }}
+  <div class="container">
+    <div class="row">
+      <div class="col-3">
 
-        {% for field in form if field.widget.input_type != 'hidden' %}
-          {% for error in field.errors %}
-            <span class="text-danger">{{ error }}</span>
-          {% endfor %}
-          {{ field(placeholder=field.label.text, class="form-control") }}
-        {% endfor %}
+      </div>
 
-        <button class="btn btn-primary btn-lg btn-block">Sign me up!</button>
-      </form>
+      <div class="col-md-5 m-3">
+
+        <form method="POST" class='border p-2 mt-4'>
+
+
+                <p class='lead'>Sign UP!</p>
+            {{ form.hidden_tag() }}
+            {% for field in form
+                    if field.widget.input_type != 'hidden'%}
+                    <fieldset>
+                        {{field.label}}
+                        {{field(class_="form-control")}}
+                        <ul class="errors">
+                            {% for error in field.errors %}
+                            <p class="alert alert-danger">
+                                {{error }}
+                        </p>
+
+
+                        </ul>
+                        {% endfor%}
+                    </fieldset>
+
+            {% endfor %}
+            <button class="btn btn-dark ">SignUp!</button>
+        </form>
+        <div class="alert alert-light  mt-2">
+          <!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
+          <span  > <strong>Already have an account?</strong>  <a href= {{url_for('auth_blueprint.login_route')}} >Log in.</a></span>
+
+        </div>
+
+    </div>
+    <div class="col-3 mt-5">
+
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 2em;">
+  {% for cat, msg in get_flashed_messages(with_categories=true) %}
+  <div class="alert alert-{{cat}}">{{msg}}</div>
+  {% endfor %}
+</div>
 </body>
+
 </html>

@@ -5,16 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gr51humlTz50RfCwdBYgT+XvbSZqkm8Loa5nWlNrvUqCinoe6C6WUZKHS2WIRx5o" crossorigin="anonymous">
 
+
     <title>Document</title>
 </head>
 <body>
-    <h1>this is the login template</h1>
-    <a href="#" class="btn btn-default">Default</a>
-    <a href="#" class="btn btn-primary">Primary</a>
-    <a href="#" class="btn btn-success">Success</a>
-    <a href="#" class="btn btn-info">Info</a>
-    <a href="#" class="btn btn-warning">Warning</a>
-    <a href="#" class="btn btn-danger">Danger</a>
+  <div class="container">
+    <div class="row">
+      <div class="col-3">
 
+      </div>
+      <div class="col-md-5 m-3">
+
+        <form method="POST" class='border p-2 mt-4'>
+
+
+                <p class='lead'>LogIn!</p>
+            {{ form.hidden_tag() }}
+            {% for field in form
+                    if field.widget.input_type != 'hidden'%}
+                    <fieldset>
+                        {{field.label}}
+                        {{field(class_="form-control")}}
+                        <ul class="errors">
+                            {% for error in field.errors %}
+                            <p class="alert alert-danger">
+                                {{error }}
+                        </p>
+
+
+                        </ul>
+                        {% endfor%}
+                    </fieldset>
+
+            {% endfor %}
+            <button class="btn btn-dark ">LogIn!</button>
+        </form>
+        <div class="alert  alert-light  mt-2">
+          <span  > <strong>Don't have an account?</strong>  <a href= {{url_for('auth_blueprint.signup_route')}}>SignUp.</a></span>
+
+        </div>
+    </div>
+
+    <div class="col-3">
+
+    </div>
+
+  </div>
+</div>
+
+<div class="container" style="margin-top: 2em;">
+  {% for cat, msg in get_flashed_messages(with_categories=true) %}
+  <div class="alert alert-{{cat}}">{{msg}}</div>
+  {% endfor %}
+</div>
 </body>
+
+
 </html>
