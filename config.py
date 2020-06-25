@@ -3,7 +3,7 @@ import os
 from secret import secret
 class Config(object):
     DEBUG = False
-    TESTING = False
+    TESTING = True
     CSRF_ENABLED = True
     SECRET_KEY = secret
     # my database name: word-search-db

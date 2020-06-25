@@ -36,6 +36,9 @@ def logout():
 @auth_BP.route('/signup', methods=['GET','POST'])
 def signup_route():
     """ take user credintials from the form, hashes the password and signs user up."""
+    if g.user:
+        flash('You are already signed up', 'warning')
+        return redirect(url_for('homepage'))
     form = SignupForm()
     if form.validate_on_submit():
         # cls, username, email, password, image_url, gender
@@ -50,6 +53,7 @@ def signup_route():
             db.session.add(user)
             db.session.commit();
             flash('user has been created', 'success')
+            login(user)
             return redirect(url_for('homepage'))
         except IntegrityError:
             flash('Username is already taken', 'danger')

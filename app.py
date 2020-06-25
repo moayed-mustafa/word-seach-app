@@ -27,8 +27,6 @@ connect_db(app)
 def make_user_global():
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
-
-
     else:
         g.user = None
 
@@ -36,11 +34,7 @@ def make_user_global():
 
 
 
-# set up the homepage so that it shows the three places to go to
-# 1- sign up
-# 2- login
-# 3- use anonymosly
-# 4- add a navbar and an about page
+
 @app.route('/')
 def homepage():
 

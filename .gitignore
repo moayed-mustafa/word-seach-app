@@ -6,3 +6,6 @@ general/__pycache__
 user/__pycache__
 .vscode
 __pycache__/forms.cpython-38.pyc
+tests/__pycache__
+test_user_model.pyc
+test_auth_routes.pyc
