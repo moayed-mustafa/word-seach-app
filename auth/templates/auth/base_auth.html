@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gr51humlTz50RfCwdBYgT+XvbSZqkm8Loa5nWlNrvUqCinoe6C6WUZKHS2WIRx5o" crossorigin="anonymous">
+
+    {% block title%}
+
+    {% endblock%}
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary cc_cursor">
+
+        <a class="navbar-brand btn btn-warning" href="#">Word Search</a>
+
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+              <a class="nav-link btn btn-success m-1" href={{url_for('homepage')}}>Home </a>
+            </li>
+
+
+            <li class="nav-item ">
+              <a class="nav-link btn btn-success m-1" href="#">About <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+
+        </div>
+
+      </nav>
+
+      {% block content%}
+
+
+      {%endblock%}
+
+      <div class="container" style="margin-top: 2em;">
+        {% for cat, msg in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{cat}}">{{msg}}</div>
+        {% endfor %}
+      </div>
+
+
+</body>
+</html>

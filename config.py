@@ -36,3 +36,4 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     # add a secretkey, a database uri here for testing using os.environ
     TESTING = True
+    os.environ['DATABASE_URL'] = "postgresql:///word-search-test"

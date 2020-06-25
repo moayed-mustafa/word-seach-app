@@ -5,16 +5,19 @@ from flask import Flask,Blueprint, render_template, request, flash, redirect, se
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from forms import SignupForm, LoginForm
-from models import User, db
+from models import User, db, connect_db
 
 
+
+
+CURR_USER_KEY = 'current_user'
 auth_BP = Blueprint('auth_blueprint', __name__,
                     template_folder='templates/auth',
                     static_folder='static')
 
 
         # Utility methods and variables
-CURR_USER_KEY = 'current_user'
+
 def login(user):
     session[CURR_USER_KEY] = user.id
 
@@ -28,6 +31,8 @@ def logout():
 #     """Page not found."""
 #     return make_response(render_template("404.html"), 404)
 
+
+# ===========================================================================================
 @auth_BP.route('/signup', methods=['GET','POST'])
 def signup_route():
     """ take user credintials from the form, hashes the password and signs user up."""
@@ -68,8 +73,18 @@ def login_route():
             return redirect(url_for('homepage'))
         flash('Invalid credintials', 'danger')
 
-
-
     return render_template('/login.html', form=form)
 
+# ===============================================================================================
+@auth_BP.route('/logout')
+def logout_route():
+    # import pdb
+    # pdb.set_trace()
+    if  not g.user:
+        flash('You need to login first', 'warning')
+        return redirect(url_for('auth_blueprint.login_route'))
 
+    else:
+        logout()
+        flash('Logged out successfuly', 'success')
+        return redirect(url_for('homepage'))
