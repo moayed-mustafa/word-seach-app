@@ -10,6 +10,7 @@ from unittest import TestCase
 from models import db, User
 
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import exc
 
 
 os.environ['DATABASE_URL'] = "postgresql:///word-search-test"
@@ -27,11 +28,11 @@ class UserModelTestCase(TestCase):
     def setUp(self):
         """ create a user to use for testing """
         User.query.delete()
-        self.user = User.signup(username='test_user',
-                    password='thisismypasswordanditspassword',
-                    email='test_user.test@email.com',
-                    image_url='https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
-                    gender='male')
+        self.user = User.signup('test_user',
+                    'thisismypasswordanditspassword',
+                    'test_user.test@email.com',
+                    'https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+                    'male')
         db.session.add(self.user)
         db.session.commit()
         # self.client = app.test_client()
@@ -71,25 +72,41 @@ class UserModelTestCase(TestCase):
 
 # ==============================================================================================================
 
-    def test_user_signup(self):
+    def test_user_signup_valid(self):
         """ tests the signup class method """
         # user signed up correctly
-        signup_user= User.signup(username='signup_test_user',
-                    password='thisismypasswordanditspasswordsignup',
-                    email='test_user_signup.test@email.com',
-                    image_url='https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
-                    gender='male')
-        db.session.add(signup_user)
+        signup_user_test= User.signup('signup_test_user',
+                    'thisismypasswordanditspasswordsignup',
+                    'test_user_signup.test@email.com',
+                    'https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+                    'male')
+        db.session.add(signup_user_test)
         db.session.commit()
-        user = User.query.filter_by(username='signup_test_user').first()
-        self.assertEqual(user, signup_user)
-        # not working fully
-        # user's sign up raises an error
-        # with self.assertRaises(IntegrityError):
-        #     signup_user= User.signup(username='signup_test_user',
-        #             password='thisismypasswordanditspasswordsignup',
-        #             email='test_user_signup.test@email.com',
-        #             image_url='https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
-        #             gender='male')
-        #     db.session.commit()
-        #     signup_user
+        user_test = User.query.filter_by(username='signup_test_user').first()
+        self.assertIsNotNone(user_test)
+        self.assertEqual(user_test.username, 'signup_test_user')
+        self.assertEqual(user_test.email, 'test_user_signup.test@email.com')
+        self.assertNotEqual(user_test.password, 'thisismypasswordanditspasswordsignup')
+        # bcrypt should start with $2b$
+        self.assertTrue(user_test.password.startswith('$2b$'))
+
+# ==============================================================================================================
+    def test_user_signup_invalid(self):
+        user = User.signup('user',
+                    'password',
+                    'test_user_signup.test@email.com',
+                    'https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+                    'male')
+        db.session.add(user)
+        db.session.commit()
+        invalid = User.signup('user',
+                    'password',
+                    'test_user_signup.test@email.com',
+                    'https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+                    'male')
+
+        with self.assertRaises(exc.IntegrityError) as context:
+            db.session.add(invalid)
+            db.session.commit()
+
+# ==============================================================================================================

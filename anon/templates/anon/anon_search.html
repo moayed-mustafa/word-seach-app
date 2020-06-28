@@ -1,6 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gr51humlTz50RfCwdBYgT+XvbSZqkm8Loa5nWlNrvUqCinoe6C6WUZKHS2WIRx5o" crossorigin="anonymous">
 
-{% extends 'index.html'%}
 
-{%block content%}
-<h2>This is a general template</h2>
-{%endblock%}
+
+    <title>Word Search || Guest search</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary cc_cursor">
+
+        <a class="navbar-brand btn btn-warning" href="#">Word Search</a>
+
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link btn btn-success m-1" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+
+
+            <li class="nav-item">
+              <a class="nav-link btn btn-success m-1" href={{url_for('about')}}>About</a>
+            </li>
+          </ul>
+
+          <ul class = ' navbar-nav my-2 my-lg-0 py-1'>
+             <li class="nav-item">
+                 <a class="nav-link btn btn-success py-1 m-1" href={{url_for('auth_blueprint.signup_route')}}>Sign Up</a>
+               </li>
+             <li class="nav-item">
+                 <a class="nav-link btn btn-success py-1 m-1" href={{url_for('auth_blueprint.login_route')}}>Login</a>
+               </li>
+          </ul>
+        </div>
+
+      </nav>
+    <div class="container mt-5">
+
+        <form id = 'form'>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Find a word</label>
+                <input type="text" class="form-control" id="wordInput" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <ul class="list-group mt-2" id='words'>
+
+          </ul>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script src="/anon/static/anon.js"></script>
+
+</body>
+</html>
