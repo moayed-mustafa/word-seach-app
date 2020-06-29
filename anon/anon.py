@@ -13,4 +13,4 @@ anon_BP = Blueprint('anon_blueprint', __name__,
 
 @anon_BP.route('/anon')
 def anon_search():
-    return render_template('anon_search.html')
+    return render_template('search.html')

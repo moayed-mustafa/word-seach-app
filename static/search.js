@@ -12,6 +12,7 @@ let list = document.getElementById('words')
 let word = document.getElementById('wordInput')
 let rand = document.getElementById('random')
 let name_err = document.getElementById('name-err')
+let userListBtn  = `<button class='btn btn-warning' onClick= addWordToUserList()>Add to list</button>`
 let li = document.createElement('li');
 li.classList.add('list-group-item')
 let wordDataDiv = document.createElement('div')
@@ -21,6 +22,10 @@ let HEADERS =  {
     "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
     "x-rapidapi-key": "82d62a047fmsh74091241e57a04fp1b7385jsn57e8b551a5c6"
 }
+currentUrl = window.location.href
+guest_user =  currentUrl.slice(currentUrl.length-5,currentUrl.length )
+console.log(guest_user)
+// console.log()
 
 
 
@@ -29,12 +34,17 @@ let HEADERS =  {
                                        //###### Neccesary #####
                                         //###### Functions   #####
                                         //#########################
+
+function addWordToUserList(e) {
+    console.log('hello')
+    console.log(e)
+}
 async function fetchWord(e) {
     e.preventDefault()
 
     // check word.value is not empty
     if (word.value == '') {
-        handleWrod(word)
+        handleWord(word)
     }
     else {
         try {
@@ -85,7 +95,7 @@ async function fetchRandomWord() {
 // ############################################################################################################
 
 // handle word alert
-function handleWrod(){
+function handleWord(){
     setTimeout(function () {
         let alert = `<div class="alert alert-warning mt-2" role="alert">
                     Must enter a word!
@@ -102,7 +112,14 @@ function handleWrod(){
 // show words on the screen
 function showWords(res) {
     console.log(res.data)
+    // create the UL
+    // you can create the ul here and make li and append them everytime
+    //
+    // <ul class="list-group mt-2 " id='words'>
+
+    //         </ul>
     clearUL()
+    // make an add to list button
 
 
         // add string data
@@ -122,16 +139,17 @@ function showWords(res) {
             data += `<section> <p>
             Definition: ${result.definition}
             </p>
-            </section>
             `
+            // </section>
             // add example:
             if (result.examples) {
+                // <section>
                 data += `
-                <section > <p>
+                    <p>
             Example: ${result.examples[0]}
             </p>
-            </section>
-                `
+            `
+            // </section>
             }
 
              // add synonyms
@@ -147,19 +165,29 @@ function showWords(res) {
             Synonyms : ${syns}.
             </p>
             </section>
+            </section>
                 `
              }
             // in case some result array has no synonyms, make border after the last thing added
             // from the result!
-             else {
-                 data += `
-                 <div class = 'border-bottom m2'></div>
+            //  else {
+            //      data += `
+            //      <div class = 'border-bottom m2'></div>
 
-                 `
+            //      `
+            //  }
+
+            if (guest_user == '/user') {
+                data += userListBtn
+
+
             }
+
+            append(data)
+            // hook the button here after it appears in the dom
+
         })
 
-    append(data)
 
 }
 // ############################################################################################################
@@ -234,16 +262,24 @@ function showRandomWord(res) {
                 `
              }
 
-        })
+             append(data)
+            })
 
     }
-    append(data)
+    // Todo:-
+    // add a button
+    // listen for clicks on the button
+    // send a word details to an api I'll make later on
+    // handle it and create a resource.
+
 }
 
 // ############################################################################################################
 
 function append(data) {
+    // console.log(data)
     wordDataDiv.innerHTML = data;
+
     li.appendChild(wordDataDiv)
     list.appendChild(li)
 }
