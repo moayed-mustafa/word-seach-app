@@ -9,3 +9,6 @@
 .bg-primary{
     background-color: #1a32af;
 }
+#words{
+    list-style: none;
+}

@@ -7,12 +7,15 @@
                                     //######Define #####
                                     //###### Variables  #####
                                     //#########################
+
 let form = document.getElementById('form')
 let list = document.getElementById('words')
 let word = document.getElementById('wordInput')
 let rand = document.getElementById('random')
 let name_err = document.getElementById('name-err')
-let userListBtn  = `<button class='btn btn-warning' onClick= addWordToUserList()>Add to list</button>`
+let userListBtn  = `<button class='btn btn-warning mb-2' onClick= addWordToUserList()>Add to list</button>`
+let headerLi = document.createElement('li');
+headerLi.classList.add('list-group-item')
 let li = document.createElement('li');
 li.classList.add('list-group-item')
 let wordDataDiv = document.createElement('div')
@@ -23,9 +26,8 @@ let HEADERS =  {
     "x-rapidapi-key": "82d62a047fmsh74091241e57a04fp1b7385jsn57e8b551a5c6"
 }
 currentUrl = window.location.href
-guest_user =  currentUrl.slice(currentUrl.length-5,currentUrl.length )
+guest_user =  currentUrl.slice(currentUrl.length-4,currentUrl.length )
 console.log(guest_user)
-// console.log()
 
 
 
@@ -37,14 +39,14 @@ console.log(guest_user)
 
 function addWordToUserList(e) {
     console.log('hello')
-    console.log(e)
+    console.log(this)
 }
 async function fetchWord(e) {
     e.preventDefault()
 
     // check word.value is not empty
     if (word.value == '') {
-        handleWord(word)
+        handleWordNotEntered(word)
     }
     else {
         try {
@@ -57,7 +59,7 @@ async function fetchWord(e) {
             if (res.status === 200) { showWords(res) }
             // request is a failure
         } catch (e) {
-
+            console.log(e)
             if (e.response.status == 404) {
                 setTimeout(function () {
                     let alert = `<div class="alert alert-danger mt-2" role="alert">
@@ -95,7 +97,7 @@ async function fetchRandomWord() {
 // ############################################################################################################
 
 // handle word alert
-function handleWord(){
+function handleWordNotEntered(){
     setTimeout(function () {
         let alert = `<div class="alert alert-warning mt-2" role="alert">
                     Must enter a word!
@@ -112,165 +114,135 @@ function handleWord(){
 // show words on the screen
 function showWords(res) {
     console.log(res.data)
-    // create the UL
-    // you can create the ul here and make li and append them everytime
-    //
-    // <ul class="list-group mt-2 " id='words'>
+    // create an li and give it an id
 
-    //         </ul>
     clearUL()
-    // make an add to list button
 
+    // let id = 1;
+    let span =  `
+    <span>
+    <h1> ${res.data.word}</h1>
+    <h3>IPA: ${res.data.pronunciation.all}</h3>
+    </span>
+    `
+    headerLi.innerHTML = span
 
-        // add string data
-        let data = `
-            <section >
-            <span class='d-inline'>
-            <h1> ${res.data.word}</h1>
-            <h3>IPA: ${res.data.pronunciation.all}</h3>
-            </span>
-            </section>
-        `
-        // extract other data
-        res.data.results.forEach(result => {
-            // add part of speech:
-            data += `Part of Speech: ${result.partOfSpeech}`
-            // add defenition:
-            data += `<section> <p>
-            Definition: ${result.definition}
-            </p>
-            `
-            // </section>
-            // add example:
-            if (result.examples) {
-                // <section>
-                data += `
-                    <p>
-            Example: ${result.examples[0]}
-            </p>
-            `
-            // </section>
-            }
+    headerLi.classList.add('border-bottom', 'm2')
+    list.appendChild(headerLi)
 
-             // add synonyms
-             if (result.synonyms) {
-                syns = ''
-                result.synonyms.forEach(syn => {
-                    syns += `${syn}, `
-                })
-                // remove the last comma from syns
-                syns = syns.slice(0, syns.length-2)
-                data += `
-                <section class = 'border-bottom' > <p>
-            Synonyms : ${syns}.
-            </p>
-            </section>
-            </section>
-                `
-             }
-            // in case some result array has no synonyms, make border after the last thing added
-            // from the result!
-            //  else {
-            //      data += `
-            //      <div class = 'border-bottom m2'></div>
-
-            //      `
-            //  }
-
-            if (guest_user == '/user') {
-                data += userListBtn
-
-
-            }
-
-            append(data)
-            // hook the button here after it appears in the dom
-
-        })
-
-
+    extractData(res.data.results)
 }
 // ############################################################################################################
 function showRandomWord(res) {
     console.log(res)
     clearUL()
-    data = `
-    <section >
-    <span class='d-inline'>
+
+    // let id = 1;
+
+    let span = `
+    <span>
     <h1> ${res.word}</h1>
+
     </span>
-    </section>
-`
+    `
+    headerLi.innerHTML = span
     // the api has descrepency in showing the IPA
     // add pronunciation
     if (res.pronunciation && res.pronunciation.all) {
-         data += `
-        <section >
-        <span class='d-inline'>
+         let IPA = `
+
+        <span >
         <h4> IPA: ${res.pronunciation.all}</h4>
         </span>
-        </section>
+
     `
+        headerLi.innerHTML += IPA
     }
-    // add pronunciation
+
+    // No IPA
     else {
-         data += `
-        <section >
+        let noIPA = `
+
         <span class='d-inline'>
         <h4> IPA not available!</h4>
         </span>
-        </section>
+
     `
+    headerLi.innerHTML += noIPA
     }
-
+    list.appendChild(headerLi)
     if (res.results) {
-        // extract other data
-        res.results.forEach(result => {
-            // add part of speech:
-            data += `Part of Speech: ${result.partOfSpeech}`
-            // add defenition:
-            data += `<section> <p>
-            Definition: ${result.definition}
-            </p>
-            </section>
-            `
-            // add example:
-            if (result.examples) {
-                data += `
-                <section > <p>
-            Example: ${result.examples[0]}
-            </p>
-            </section>
-                `
-            }
-
-
-
-             // add synonyms
-             if (result.synonyms) {
-                syns = ''
-                result.synonyms.forEach(syn => {
-                    syns += `${syn}, `
-                })
-                // remove the last comma from syns
-                syns = syns.slice(0, syns.length-2)
-                data += `
-                <section class = 'border-bottom' > <p>
-            Synonyms : ${syns}.
-            </p>
-            </section>
-                `
-             }
-
-             append(data)
-            })
-
+        extractData(res.results)
     }
-    // Todo:-
-    // add a button
-    // listen for clicks on the button
-    // send a word details to an api I'll make later on
-    // handle it and create a resource.
+    else {
+        // alert that data is not availabe due to api error
+        let noDataLi = document.createElement('li')
+        setTimeout(function () {
+            let alert = `
+
+            <div class="alert alert-danger mt-2" role="alert">
+                        API Error, Data not fully Available
+                        </div>
+            `
+            noDataLi.innerHTML = alert
+            list.append(noDataLi)
+            }, 100)
+            // clear the alert after 2 sec
+            setTimeout(function () {
+                noDataLi.innerHTML = ''
+            }, 5000)
+    }
+
+}
+
+// ############################################################################################################
+function extractData(results) {
+    console.log('activated!')
+    let id =1
+    results.forEach(result => {
+        // craete an li here and add id to it
+    my_li = document.createElement('li')
+    my_li.setAttribute('id', id)
+    id++
+        // part of speech and defenition:
+    pos = `<p><b>Part of Speech:</b>${result.partOfSpeech}</p>`
+    my_li.innerHTML= pos
+    def = `<p><b>Definition:</b>${result.definition}</p>`
+    my_li.innerHTML+= def
+        // add example:
+    if (result.examples) {
+        example = `
+            <p>
+            <b> Example:</b> ${result.examples[0]}
+            </p>
+            `
+        my_li.innerHTML+= example
+        }
+
+         // add synonyms
+    if (result.synonyms) {
+        syns = ''
+        result.synonyms.forEach(syn => {
+            syns += `${syn}, `
+        })
+        // remove the last comma from syns
+        syns = syns.slice(0, syns.length-2)
+        synTag = `
+            <p>
+            Synonyms :<b> ${syns}</b>.
+            </p>
+                `
+            my_li.innerHTML += synTag
+    }
+            // add button
+            if (guest_user == 'user') { my_li.innerHTML += userListBtn }
+            // add border
+            my_li.classList.add('border', 'm2', 'p-2')
+
+    // append to the list:
+    list.appendChild(my_li)
+
+    })
 
 }
 
