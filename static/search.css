@@ -1,14 +1,47 @@
 .btn-primary{
     background-color: #1a32af;
-    color:	#94c5ff
+    color:	white
+
+}
+.btn-primary:hover{
+    background-color: #f2e9da;
+    color:	#383838;
+    border: black
+
+}
+.btn-success{
+    background-color: #783442;
+    color:	white;
+    border: black
+
+}
+.btn-success:hover{
+    background-color: #f2e9da;
+    color:	#383838;
+    border: black
+
+}
+.btn-warning{
+    background-color: #f8bd57;
+    color:	white;
+    border: black
+
+}
+.btn-warning:hover{
+    background-color: #f2e9da;
+    color:	#383838;
+    border: black
 
 }
 #random{
     margin-top: 5px;
 }
-.bg-primary{
+/* .bg-primary{
     background-color: #1a32af;
-}
+} */
 #words{
     list-style: none;
+}
+.navy{
+    background: #000080;
 }

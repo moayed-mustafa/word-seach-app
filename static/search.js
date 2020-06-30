@@ -13,19 +13,21 @@ let list = document.getElementById('words')
 let word = document.getElementById('wordInput')
 let rand = document.getElementById('random')
 let name_err = document.getElementById('name-err')
-let userListBtn  = `<button class='btn btn-warning mb-2' onClick= addWordToUserList()>Add to list</button>`
+
+
+
 let headerLi = document.createElement('li');
 headerLi.classList.add('list-group-item')
-let li = document.createElement('li');
-li.classList.add('list-group-item')
-let wordDataDiv = document.createElement('div')
-wordDataDiv.classList.add('word-data-div')
+
+// let li = document.createElement('li');
+// li.classList.add('list-group-item')
 let URL = "https://wordsapiv1.p.rapidapi.com/words/"
 let HEADERS =  {
     "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
     "x-rapidapi-key": "82d62a047fmsh74091241e57a04fp1b7385jsn57e8b551a5c6"
 }
 currentUrl = window.location.href
+// you can instead of donig this, just check if user is included here because of the ? that shows up sometimes
 guest_user =  currentUrl.slice(currentUrl.length-4,currentUrl.length )
 console.log(guest_user)
 
@@ -37,10 +39,7 @@ console.log(guest_user)
                                         //###### Functions   #####
                                         //#########################
 
-function addWordToUserList(e) {
-    console.log('hello')
-    console.log(this)
-}
+
 async function fetchWord(e) {
     e.preventDefault()
 
@@ -114,11 +113,9 @@ function handleWordNotEntered(){
 // show words on the screen
 function showWords(res) {
     console.log(res.data)
-    // create an li and give it an id
 
     clearUL()
 
-    // let id = 1;
     let span =  `
     <span>
     <h1> ${res.data.word}</h1>
@@ -137,7 +134,6 @@ function showRandomWord(res) {
     console.log(res)
     clearUL()
 
-    // let id = 1;
 
     let span = `
     <span>
@@ -198,12 +194,11 @@ function showRandomWord(res) {
 // ############################################################################################################
 function extractData(results) {
     console.log('activated!')
-    let id =1
+    let id =0
     results.forEach(result => {
         // craete an li here and add id to it
     my_li = document.createElement('li')
-    my_li.setAttribute('id', id)
-    id++
+
         // part of speech and defenition:
     pos = `<p><b>Part of Speech:</b>${result.partOfSpeech}</p>`
     my_li.innerHTML= pos
@@ -235,7 +230,25 @@ function extractData(results) {
             my_li.innerHTML += synTag
     }
             // add button
-            if (guest_user == 'user') { my_li.innerHTML += userListBtn }
+        if (guest_user == 'user') {
+            let flash = document.createElement('div')
+            let userListBtn = document.createElement('button')
+            userListBtn.innerHTML = 'Add'
+            userListBtn.setAttribute('id', id)
+            // Todo you should send to the my_api here to check if the word exist for the usr or not
+            // change color and innerHtml accordingly
+            userListBtn.classList.add('btn', 'btn-warning')
+            userListBtn.addEventListener('click', function (e){
+                handleWordClick(results, parseInt(this.id), flash)
+
+            })
+            // create a div to flash the user with:
+
+            my_li.append(flash)
+            my_li.append(userListBtn)
+
+            id++
+        }
             // add border
             my_li.classList.add('border', 'm2', 'p-2')
 
@@ -247,7 +260,28 @@ function extractData(results) {
 }
 
 // ############################################################################################################
+function handleWordClick(results, id, flash) {
+    console.log(results, id)
+    // Todo
+    // 1-you want to send this data: results[id] to your api route on user
+    // 2-handle adding the word to the database over there
+    // 3-send the ok back here
+    // 4- handle flashing the user
+    // console.log(flash)
+    // setTimeout(function () {
+    //     flash.classList.add('alert', 'alert-success')
+    //     flash.innerHTML = 'Word Added to List'
 
+    // }, 500)
+    // setTimeout(function () {
+    //     flash.innerHTML = ''
+    //     flash.classList.remove('alert', 'alert-success')
+    // },5000)
+    // 5- once the word is added, change the button color to red, and on click,send to my api to delete it form there.
+    console.log(results[id])
+
+
+}
 // ############################################################################################################
 
 function clearUL() {
