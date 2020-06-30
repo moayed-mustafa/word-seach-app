@@ -248,13 +248,6 @@ function extractData(results) {
 
 // ############################################################################################################
 
-function append(data) {
-    // console.log(data)
-    wordDataDiv.innerHTML = data;
-
-    li.appendChild(wordDataDiv)
-    list.appendChild(li)
-}
 // ############################################################################################################
 
 function clearUL() {
