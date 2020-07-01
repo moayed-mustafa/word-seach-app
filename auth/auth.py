@@ -73,6 +73,7 @@ def login_route():
         if user:
             login(user)
             flash(f'welcome {user.username}', 'success')
+
             # we should take the user to his profile
             return redirect(url_for('homepage'))
         flash('Invalid credintials', 'danger')

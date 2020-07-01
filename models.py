@@ -4,6 +4,7 @@
 
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -31,6 +32,9 @@ class User(db.Model):
     image_url = db.Column(db.String, default='https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80')
     gender = db.Column(db.String, nullable=False)
 
+
+    # set a relationship
+    # words = db.relationship('Word', secondary="user_words")
     # add a sign up and authenticate methods:
     @classmethod
     def signup(cls, username, password, email, image_url, gender):
@@ -53,8 +57,27 @@ class User(db.Model):
         return False
 
 
+# =====================================================================================================================
+
+    # user model
+class Word(db.Model):
+    __tablename__ = 'words'
+    """  a table for words """
+    id = db.Column(db.Integer, primary_key=True)
+    word = db.Column(db.String, nullable=False)
+    definition = db.Column(db.String, nullable=False)
+    part_of_speech = db.Column(db.String, nullable=False)
+    synonym = db.Column(db.String, nullable=True, default= 'Not Available')
+    example = db.Column(db.String, nullable=True, default='Not Available')
 
 
 
 
+    #user_word model
+# =====================================================================================================================
+class List(db.Model):
+    __tablename__ = 'user_words'
 
+    """a table for a user list of words """
+    user_id =  db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)
+    word_id =  db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)

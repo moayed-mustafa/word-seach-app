@@ -1,61 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gr51humlTz50RfCwdBYgT+XvbSZqkm8Loa5nWlNrvUqCinoe6C6WUZKHS2WIRx5o" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/search.css">
 
-    <!-- import jasmin -->
-    <!-- <link rel="stylesheet" href="https://unpkg.com/jasmine-core/lib/jasmine-core/jasmine.css" />
-    <script
-  src="https://unpkg.com/jasmine-core/lib/jasmine-core/jasmine.js"></script>
-<script
-  src="https://unpkg.com/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
-<script
-  src= "https://unpkg.com/jasmine-core/lib/jasmine-core/boot.js"></script> -->
+{% extends 'base.html' %}
 
-  <!-- Import jasmin dom methods -->
-  <!-- <link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine-core/jasmine_favicon.png">
-  <link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine-core/jasmine.css">
-  <script type="text/javascript" src="jasmine/lib/jasmine-core/jasmine.js"></script>
-  <script type="text/javascript" src="jasmine/lib/jasmine-core/jasmine-html.js"></script>
-  <script type="text/javascript" src="jasmine/lib/jasmine-core/boot.js"></script>
+{% block title%}
+  <title>Word Search || search</title>
+  {% endblock %}
 
-  <script type="text/javascript" src="dom-matchers.js"></script> -->
-
-
-    <title>Word Search || Guest search</title>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg  cc_cursor navy" >
-
-        <a class="navbar-brand btn btn-warning" href={{url_for('homepage')}}>Word Search</a>
-
-
-        <div class="collapse navbar-collapse navy" id="navbarColor01">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link btn btn-success m-1" href={{url_for('homepage')}}>Home <span class="sr-only">(current)</span></a>
-            </li>
-
-
-            <li class="nav-item">
-              <a class="nav-link btn btn-success m-1" href={{url_for('about')}}>About</a>
-            </li>
-          </ul>
-
-          <ul class = ' navbar-nav my-2 my-lg-0 py-1'>
-             <li class="nav-item">
-                 <a class="nav-link btn btn-success py-1 m-1" href={{url_for('auth_blueprint.signup_route')}}>Sign Up</a>
-               </li>
-             <li class="nav-item">
-                 <a class="nav-link btn btn-success py-1 m-1" href={{url_for('auth_blueprint.login_route')}}>Login</a>
-               </li>
-          </ul>
-        </div>
-
-      </nav>
+{% block content%}
     <div class="container mt-5">
       <div class="row">
         <div class="col-9 ">
@@ -83,10 +33,4 @@
 
 
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-    <script src="/static/search.js"></script>
-    <script src="/static/search.test.js"></script>
-
-</body>
-</html>
+{% endblock %}

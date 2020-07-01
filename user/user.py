@@ -1,8 +1,9 @@
 
 
 
-from flask import Flask,Blueprint, render_template, request, flash, redirect, session, g, url_for
+from flask import Flask,Blueprint, render_template, request, flash, redirect, session, g, url_for, json
 from flask_debugtoolbar import DebugToolbarExtension
+from models import User, Word
 
 user_BP = Blueprint('user_blueprint', __name__,
                     template_folder='templates/user',
@@ -16,8 +17,19 @@ def user_profile(id):
     # a of now, redirect to the search page right away since we have no user words nor a words table
     return redirect(url_for('user_blueprint.user_search', id=g.user.id))
     # return render_template('user.html')
+# =============================================================================
 
 @user_BP.route('/search/<int:id>/user')
 def user_search(id):
 
     return render_template('search.html')
+# =============================================================================
+
+                        #User api routes
+@user_BP.route('/add-word', methods=['POST'])
+def add_word_to_user_list():
+    data = request.get_json()
+    print('*********************************************************')
+    print(data)
+    print('*********************************************************')
+    return ('ok')

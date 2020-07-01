@@ -13,6 +13,7 @@ let list = document.getElementById('words')
 let word = document.getElementById('wordInput')
 let rand = document.getElementById('random')
 let name_err = document.getElementById('name-err')
+let flask_flash = document.querySelector('.welcome')
 
 
 
@@ -41,6 +42,7 @@ console.log(guest_user)
 
 
 async function fetchWord(e) {
+    // Fetchs a word defenition entered by the user.
     e.preventDefault()
 
     // check word.value is not empty
@@ -60,22 +62,14 @@ async function fetchWord(e) {
         } catch (e) {
             console.log(e)
             if (e.response.status == 404) {
-                setTimeout(function () {
-                    let alert = `<div class="alert alert-danger mt-2" role="alert">
-                                ${e.response.data.message}
-                                </div>`
-                    list.innerHTML = alert
-                    }, 100)
-                    // clear the alert after 2 sec
-                    setTimeout(function () {
-                        list.innerHTML = ''
-                    }, 3000)
+                handleError(e.response.data.message)
             }
         }
     }
 }
 // ############################################################################################################
 async function fetchRandomWord() {
+    // fetches a random word.
     console.log('fetching random word...')
     // for some reason axios won't perform a random word request!!
     var settings = {
@@ -96,7 +90,8 @@ async function fetchRandomWord() {
 // ############################################################################################################
 
 // handle word alert
-function handleWordNotEntered(){
+function handleWordNotEntered() {
+    // handles a submit without entering a word
     setTimeout(function () {
         let alert = `<div class="alert alert-warning mt-2" role="alert">
                     Must enter a word!
@@ -109,9 +104,24 @@ function handleWordNotEntered(){
     }, 2000)
 }
 // ############################################################################################################
+function handleError(message) {
+    // handles server error
+    setTimeout(function () {
+        let alert = `<div class="alert alert-danger mt-2" role="alert">
+                    ${message}
+                    </div>`
+        list.innerHTML = alert
+        }, 100)
+        // clear the alert after 2 sec
+        setTimeout(function () {
+            list.innerHTML = ''
+        }, 3000)
+}
+// ############################################################################################################
 
 // show words on the screen
 function showWords(res) {
+    // draws part of the word info on the UI and calls a function that draws the rest
     console.log(res.data)
 
     clearUL()
@@ -126,11 +136,13 @@ function showWords(res) {
 
     headerLi.classList.add('border-bottom', 'm2')
     list.appendChild(headerLi)
+    // package word and pronuncitation in an object to send with the results
 
-    extractData(res.data.results)
+    extractData(res.data.results, res.data.pronunciation.all)
 }
 // ############################################################################################################
 function showRandomWord(res) {
+    // draws a random word on the UI and calls a function that draws the rest
     console.log(res)
     clearUL()
 
@@ -168,7 +180,7 @@ function showRandomWord(res) {
     }
     list.appendChild(headerLi)
     if (res.results) {
-        extractData(res.results)
+        extractData(res.results, res.data.pronunciation.all)
     }
     else {
         // alert that data is not availabe due to api error
@@ -192,7 +204,8 @@ function showRandomWord(res) {
 }
 
 // ############################################################################################################
-function extractData(results) {
+function extractData(results, pronunciation) {
+    // does the overlapping html drawing between the random search and ususal search
     console.log('activated!')
     let id =0
     results.forEach(result => {
@@ -239,7 +252,7 @@ function extractData(results) {
             // change color and innerHtml accordingly
             userListBtn.classList.add('btn', 'btn-warning')
             userListBtn.addEventListener('click', function (e){
-                handleWordClick(results, parseInt(this.id), flash)
+                handleWordClick(results, parseInt(this.id), flash, pronunciation)
 
             })
             // create a div to flash the user with:
@@ -260,8 +273,9 @@ function extractData(results) {
 }
 
 // ############################################################################################################
-function handleWordClick(results, id, flash) {
-    console.log(results, id)
+async function handleWordClick(results, id, flash, pronunciation) {
+    // handles adding a word to the user's list
+    // console.log(results, id)
     // Todo
     // 1-you want to send this data: results[id] to your api route on user
     // 2-handle adding the word to the database over there
@@ -278,7 +292,12 @@ function handleWordClick(results, id, flash) {
     //     flash.classList.remove('alert', 'alert-success')
     // },5000)
     // 5- once the word is added, change the button color to red, and on click,send to my api to delete it form there.
-    console.log(results[id])
+    // console.log(results[id], pronunciation, word.value)
+    data = { 'word': word.value, 'pronunciation': pronunciation, 'info': results[id] }
+    // send data to my route
+    let res = await axios.post('/add-word', data)
+    console.log(res)
+    console.log(data)
 
 
 }
@@ -289,7 +308,15 @@ function clearUL() {
     list.innerHTML = ''
 }
 // ############################################################################################################
+function removeGreeting() {
+    // removees the flash message send by flask after 2.5 seconds
+    let greet = setTimeout(function () {
+        flask_flash.innerHTML = ''
+        flask_flash.classList.remove('alert')
+    }, 2500)
 
+
+}
                                               // ##########################
                                                 //###### Hook  #####
                                                 //###### Functions #####
@@ -302,3 +329,6 @@ function clearUL() {
 // hook things up
 form.addEventListener('submit', fetchWord)
 rand.addEventListener('click', fetchRandomWord)
+if (flask_flash !== null) {
+    removeGreeting()
+}
