@@ -34,7 +34,12 @@ class User(db.Model):
 
 
     # set a relationship
-    # words = db.relationship('Word', secondary="user_words")
+    words = db.relationship('Word', secondary="user_words", passive_deletes=True,cascade='all,delete')
+
+
+    def __repr__(self):
+        """ a better representation of the Word class """
+        return f'{self.id} ||{self.username}'
     # add a sign up and authenticate methods:
     @classmethod
     def signup(cls, username, password, email, image_url, gender):
@@ -70,6 +75,10 @@ class Word(db.Model):
     synonym = db.Column(db.String, nullable=True, default= 'Not Available')
     example = db.Column(db.String, nullable=True, default='Not Available')
 
+    def __repr__(self):
+        """ a better representation of the Word class """
+        return f'{self.id} || {self.word} ||{self.definition}'
+
 
 
 
@@ -79,5 +88,9 @@ class List(db.Model):
     __tablename__ = 'user_words'
 
     """a table for a user list of words """
-    user_id =  db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)
-    word_id =  db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)
+    user_id =  db.Column(db.Integer,db.ForeignKey('users.id', ondelete="cascade"), primary_key=True)
+    word_id =  db.Column(db.Integer,db.ForeignKey('words.id', ondelete="cascade"))
+# user_words = db.Table('user_words',
+#     db.Column('word_id',db.Integer, db.ForeignKey('users.id', ondelete="cascade")), , primary_key=True
+#     db.Column('user_id',db.Integer,db.ForeignKey('words.id', ondelete="cascade"))
+# )

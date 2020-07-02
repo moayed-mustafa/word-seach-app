@@ -18,9 +18,4 @@ part_of_speech='adjective', synonym="blueish", example="October's bright blue we
 db.session.add(word)
 user.words.append(word)
 db.session.commit()
-# id = db.Column(db.Integer, primary_key=True,)
-#     word = db.Column(db.String, nullable=False, uniques=False)
-#     definition = db.Column(db.String, nullable=False, uniques=False)
-#     part_of_speech = db.Column(db.String, nullable=False, uniques=False)
-#     synonym = db.Column(db.String, nullable=True, uniques=False, default= 'Not Available')
-#     example = db.Column(db.String, nullable=True, uniques=False, default='Not Available')
+

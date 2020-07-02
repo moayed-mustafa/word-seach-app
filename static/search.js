@@ -20,8 +20,6 @@ let flask_flash = document.querySelector('.welcome')
 let headerLi = document.createElement('li');
 headerLi.classList.add('list-group-item')
 
-// let li = document.createElement('li');
-// li.classList.add('list-group-item')
 let URL = "https://wordsapiv1.p.rapidapi.com/words/"
 let HEADERS =  {
     "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
@@ -206,7 +204,6 @@ function showRandomWord(res) {
 // ############################################################################################################
 function extractData(results, pronunciation) {
     // does the overlapping html drawing between the random search and ususal search
-    console.log('activated!')
     let id =0
     results.forEach(result => {
         // craete an li here and add id to it
@@ -248,13 +245,10 @@ function extractData(results, pronunciation) {
             let userListBtn = document.createElement('button')
             userListBtn.innerHTML = 'Add'
             userListBtn.setAttribute('id', id)
-            // Todo you should send to the my_api here to check if the word exist for the usr or not
-            // change color and innerHtml accordingly
-            userListBtn.classList.add('btn', 'btn-warning')
-            userListBtn.addEventListener('click', function (e){
-                handleWordClick(results, parseInt(this.id), flash, pronunciation)
 
-            })
+            userListBtn.classList.add('btn', 'btn-warning')
+
+            userListBtn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )
             // create a div to flash the user with:
 
             my_li.append(flash)
@@ -273,34 +267,53 @@ function extractData(results, pronunciation) {
 }
 
 // ############################################################################################################
-async function handleWordClick(results, id, flash, pronunciation) {
-    // handles adding a word to the user's list
-    // console.log(results, id)
-    // Todo
-    // 1-you want to send this data: results[id] to your api route on user
-    // 2-handle adding the word to the database over there
-    // 3-send the ok back here
-    // 4- handle flashing the user
-    // console.log(flash)
-    // setTimeout(function () {
-    //     flash.classList.add('alert', 'alert-success')
-    //     flash.innerHTML = 'Word Added to List'
-
-    // }, 500)
-    // setTimeout(function () {
-    //     flash.innerHTML = ''
-    //     flash.classList.remove('alert', 'alert-success')
-    // },5000)
-    // 5- once the word is added, change the button color to red, and on click,send to my api to delete it form there.
-    // console.log(results[id], pronunciation, word.value)
+ handleAddWord  =  function (results, id, flash, pronunciation) {
+    // Had to use currying since my event listener accepts parameters
+     // and I want to remove it in the future.
+     return async function curried() {
     data = { 'word': word.value, 'pronunciation': pronunciation, 'info': results[id] }
-    // send data to my route
     let res = await axios.post('/add-word', data)
-    console.log(res)
-    console.log(data)
+         if (res.status == 201) {
+            //  flash the user
+             flashUser(flash, 'success', 'word added to list')
+
+        btn = document.getElementById(id)
+        // remove the event listener
+        btn.removeEventListener('click',curried)
+        // add a new listerent and associate it with delete
+        btn.addEventListener('click', handleDeleteWord(results, id, flash, pronunciation))
+        btn.innerHTML = 'Remove'
+        btn.classList.add('btn', 'delete')
+        // build the delete route
+    }
+}
 
 
 }
+// ############################################################################################################
+function handleDeleteWord(results, id,flash, pronunciation) {
+
+    return async function curried() {
+        definition = {'definition':results[id].definition}
+        console.log(results[id],definition)
+
+        let res = await axios.post('/delete-word', definition)
+        console.log(res)
+        if (res.statusText === "OK!") {
+            btn = document.getElementById(id)
+            btn.removeEventListener('click', curried)
+            flashUser(flash, 'danger', 'word deleted')
+            btn.innerHTML = 'Add'
+            btn.classList.remove('delete')
+            btn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )
+        }
+        else {
+            flashUser(flash, 'danger',res.statusText)
+        }
+
+    }
+}
+
 // ############################################################################################################
 
 function clearUL() {
@@ -317,6 +330,20 @@ function removeGreeting() {
 
 
 }
+// ############################################################################################################
+function flashUser(flash, cat, msg) {
+        setTimeout(function () {
+        flash.classList.add('alert', `alert-${cat}`)
+        flash.innerHTML = msg
+
+    }, 500)
+    setTimeout(function () {
+        flash.innerHTML = ''
+        flash.classList.remove('alert', `alert-${cat}`)
+    },5000)
+}
+// ############################################################################################################
+
                                               // ##########################
                                                 //###### Hook  #####
                                                 //###### Functions #####
