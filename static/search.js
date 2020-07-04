@@ -144,7 +144,7 @@ function showRandomWord(res) {
     console.log(res)
     clearUL()
 
-
+    let pron = null;
     let span = `
     <span>
     <h1> ${res.word}</h1>
@@ -154,17 +154,30 @@ function showRandomWord(res) {
     headerLi.innerHTML = span
     // the api has descrepency in showing the IPA
     // add pronunciation
-    if (res.pronunciation && res.pronunciation.all) {
-         let IPA = `
+    if (typeof(res.pronunciation) == 'string' || typeof(res.pronunciation) == 'object') {
+        if (typeof (res.pronunciation) == 'string') {
+            pron = res.pronunciation
+            let IPA = `
 
-        <span >
-        <h4> IPA: ${res.pronunciation.all}</h4>
-        </span>
+           <span >
+           <h4> IPA: ${res.pronunciation}</h4>
+           </span>
 
-    `
-        headerLi.innerHTML += IPA
+       `
+           headerLi.innerHTML += IPA
+        }
+        else if (typeof (res.pronunciation) == 'object') {
+            pron = res.pronunciation.all
+            let IPA = `
+
+           <span >
+           <h4> IPA: ${res.pronunciation.all}</h4>
+           </span>
+
+       `
+           headerLi.innerHTML += IPA
+        }
     }
-
     // No IPA
     else {
         let noIPA = `
@@ -177,9 +190,12 @@ function showRandomWord(res) {
     headerLi.innerHTML += noIPA
     }
     list.appendChild(headerLi)
+
     if (res.results) {
-        extractData(res.results, res.data.pronunciation.all)
+        extractData(res.results, pron)
     }
+
+
     else {
         // alert that data is not availabe due to api error
         let noDataLi = document.createElement('li')
@@ -205,14 +221,14 @@ function showRandomWord(res) {
 function extractData(results, pronunciation) {
     // does the overlapping html drawing between the random search and ususal search
     let id =0
-    results.forEach(result => {
+    results.forEach( result => {
         // craete an li here and add id to it
     my_li = document.createElement('li')
 
         // part of speech and defenition:
-    pos = `<p><b>Part of Speech:</b>${result.partOfSpeech}</p>`
+    let pos = `<p><b>Part of Speech:</b>${result.partOfSpeech}</p>`
     my_li.innerHTML= pos
-    def = `<p><b>Definition:</b>${result.definition}</p>`
+    let def = `<p><b>Definition:</b>${result.definition}</p>`
     my_li.innerHTML+= def
         // add example:
     if (result.examples) {
@@ -241,21 +257,7 @@ function extractData(results, pronunciation) {
     }
             // add button
         if (guest_user == 'user') {
-            let flash = document.createElement('div')
-            let userListBtn = document.createElement('button')
-            userListBtn.innerHTML = 'Add'
-            userListBtn.setAttribute('id', id)
-
-            userListBtn.classList.add('btn', 'btn-warning')
-
-            userListBtn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )
-            // create a div to flash the user with:
-
-            my_li.append(flash)
-            my_li.append(userListBtn)
-
-            id++
-        }
+            makeButton(my_li,id, result, pronunciation, results)}
             // add border
             my_li.classList.add('border', 'm2', 'p-2')
 
@@ -275,7 +277,7 @@ function extractData(results, pronunciation) {
     let res = await axios.post('/add-word', data)
          if (res.status == 201) {
             //  flash the user
-             flashUser(flash, 'success', 'word added to list')
+             flashUser(flash, 'success', 'Word added to list!')
 
         btn = document.getElementById(id)
         // remove the event listener
@@ -299,10 +301,10 @@ function handleDeleteWord(results, id,flash, pronunciation) {
 
         let res = await axios.post('/delete-word', definition)
         console.log(res)
-        if (res.statusText === "OK!") {
+        if (res.status != 202) {
             btn = document.getElementById(id)
             btn.removeEventListener('click', curried)
-            flashUser(flash, 'danger', 'word deleted')
+            flashUser(flash, 'danger', 'Word Removed from list!')
             btn.innerHTML = 'Add'
             btn.classList.remove('delete')
             btn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )
@@ -314,6 +316,37 @@ function handleDeleteWord(results, id,flash, pronunciation) {
     }
 }
 
+// ############################################################################################################
+async function makeButton(listElement,id, result, pronunciation, results) {
+    let data = {"definition": result.definition}
+    res = await axios.post('/find-word', data)
+    let flash = document.createElement('div')
+    let userListBtn = document.createElement('button')
+    console.log(res)
+    if (res.statusText == "OK") {
+        // button should show delete and has delete eventListener
+        userListBtn.innerHTML = 'Remove'
+        userListBtn.setAttribute('id', id)
+        userListBtn.classList.add('btn', 'btn-warning','delete')
+        userListBtn.addEventListener('click',handleDeleteWord(results, id, flash, pronunciation) )
+
+    }
+    else {
+        userListBtn.innerHTML = 'Add'
+        userListBtn.setAttribute('id', id)
+
+        userListBtn.classList.add('btn', 'btn-warning')
+
+        userListBtn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )
+
+    }
+
+    // create a div to flash the user with:
+    listElement.append(flash)
+    listElement.append(userListBtn)
+    id++
+    // return {'flash':flash,'btn':userListBtn}
+}
 // ############################################################################################################
 
 function clearUL() {

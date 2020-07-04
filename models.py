@@ -88,8 +88,9 @@ class List(db.Model):
     __tablename__ = 'user_words'
 
     """a table for a user list of words """
+    # id = db.Column(db.Integer, primary_key=True)
     user_id =  db.Column(db.Integer,db.ForeignKey('users.id', ondelete="cascade"), primary_key=True)
-    word_id =  db.Column(db.Integer,db.ForeignKey('words.id', ondelete="cascade"))
+    word_id =  db.Column(db.Integer,db.ForeignKey('words.id', ondelete="cascade"), primary_key=True)
 # user_words = db.Table('user_words',
 #     db.Column('word_id',db.Integer, db.ForeignKey('users.id', ondelete="cascade")), , primary_key=True
 #     db.Column('user_id',db.Integer,db.ForeignKey('words.id', ondelete="cascade"))
