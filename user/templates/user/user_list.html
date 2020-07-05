@@ -7,9 +7,15 @@
     {%endblock%}
 
     {% block content%}
+
+
     <div class="container">
-        <h3>{{g.user.username}}'s list of words</h3>
-        <div class="row">
+        {%if list|length == 0%}
+        <div class='alert alert-info'>Your words list is empty {{g.user.username}}, fill it up by searching for some words 🙂 </div>
+        {% else %}
+        <h3 id='header'>{{g.user.username}}'s list of words</h3>
+        <div id="flash"></div>
+        <div class="row" id='cards'>
             {% for word in list%}
             <div class="col-3 m-2">
                 <div class="card text-center" style="width: 18rem;">
@@ -28,6 +34,7 @@
 
         </div>
 
+        {% endif %}
     </div>
     <script src="/static/user_list.js"></script>
 
