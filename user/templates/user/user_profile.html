@@ -5,5 +5,48 @@
   {% endblock %}
 
   {% block content%}
-  <h3>User update form</h3>
+  <div class="container">
+    <div class="row">
+      <div class="col-3">
+
+      </div>
+
+      <div class="col-md-5 m-3">
+
+        <form method="POST" class='border p-2 mt-4'>
+
+
+                <p class='lead'>Edit Your Profile</p>
+            {{ form.hidden_tag() }}
+            {% for field in form
+                    if field.widget.input_type != 'hidden'%}
+                    <fieldset>
+                        {{field.label}}
+                        {{field(class_="form-control")}}
+                        <ul class="errors">
+                            {% for error in field.errors %}
+                            <p class="alert alert-danger">
+                                {{error }}
+                        </p>
+
+
+                        </ul>
+                        {% endfor%}
+                    </fieldset>
+
+            {% endfor %}
+            <button class="btn btn-dark ">Confirm!</button>
+        </form>
+        <div class="alert alert-light  mt-2">
+          <span  > <strong>Changed your mind</strong>  <a href= {{url_for('homepage')}} >Cancel.</a></span>
+
+        </div>
+
+    </div>
+    <div class="col-3 mt-5">
+
+    </div>
+  </div>
+</div>
+
 {% endblock%}

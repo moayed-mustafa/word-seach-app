@@ -3,16 +3,36 @@
 
 from flask import Flask,Blueprint, render_template, request, flash, redirect, session, g, url_for, json
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Word,List
+from models import db, connect_db, User, Word, List
+from forms import UserEditForm
 
 user_BP = Blueprint('user_blueprint', __name__,
                     template_folder='templates/user',
                     static_folder='static')
-
-@user_BP.route('/profile/<int:id>/user')
+# =============================================================================
+        # edit user
+@user_BP.route('/profile/<int:id>/user',methods=["GET", "POST"])
 def user_profile(id):
-    """ serves the page that allows the user to update his/her details """
-    return render_template('user_profile.html')
+    """Update profile for current user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect(url_for('homepage'))
+
+    user = g.user
+    form = UserEditForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate(user.username, form.password.data):
+            user.username = form.username.data
+            user.email = form.email.data
+            user.image_url = form.image_url.data
+
+            db.session.commit()
+            return redirect(url_for('homepage'))
+
+        flash("Wrong password, please try again.", 'danger')
+    return render_template('user_profile.html', form=form)
 # =============================================================================
 
 @user_BP.route('/list/<int:id>/user')
@@ -21,11 +41,7 @@ def user_list(id):
     """
     user = User.query.get_or_404(id)
     list = user.words
-    # semon the list of words the user saved
-    # draw them on the template as cards.
-    # each word card should have a button to delete the word
-    # add a js file to perform the deletion
-    # flash the user on delete
+
     return render_template('user_list.html', list=list)
 # =============================================================================
 @user_BP.route('/search/<int:id>/user')
@@ -53,8 +69,32 @@ def find_word_in_user_list():
 
     return ('Not Found', 204)
 
+# =============================================================================
 
+@user_BP.route('/users/profile', methods=["GET", "POST"])
+def edit_profile():
+    """Update profile for current user."""
 
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect(url_for('homepage'))
+
+    user = g.user
+    form = UserEditForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate(user.username, form.password.data):
+            user.username = form.username.data
+            user.email = form.email.data
+            user.image_url = form.image_url.data
+            user.bio = form.bio.data
+
+            db.session.commit()
+            return redirect(url_for('homepage'))
+
+        flash("Wrong password, please try again.", 'danger')
+
+    return render_template('users/edit.html', form=form)
 # =============================================================================
 
 
