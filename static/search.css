@@ -3,7 +3,7 @@
     color:	white
 
 }
-.btn-primary:hover{
+.btn:hover{
     background-color: #f2e9da;
     color:	#383838;
     border: black
@@ -15,30 +15,20 @@
     border: black
 
 }
-.btn-success:hover{
-    background-color: #f2e9da;
-    color:	#383838;
-    border: black
 
-}
 .btn-warning{
     background-color: #f8bd57;
     color:	white;
     border: black
 
 }
-.btn-warning:hover{
-    background-color: #f2e9da;
-    color:	#383838;
-    border: black
 
-}
 #random{
     margin-top: 5px;
 }
-/* .bg-primary{
+.bg-primary{
     background-color: #1a32af;
-} */
+}
 #words{
     list-style: none;
 }
@@ -48,4 +38,5 @@
 
 .delete{
     background-color: #d61414;
+    color:#f2e9da;
 }

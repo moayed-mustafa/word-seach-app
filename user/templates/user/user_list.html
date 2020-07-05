@@ -1,0 +1,34 @@
+
+
+
+{% extends 'base.html' %}
+    {% block title%}
+    <title>Word Search || user list</title>
+    {%endblock%}
+
+    {% block content%}
+    <div class="container">
+        <h3>User List of words</h3>
+        {% for word in list%}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{word.word}}</h5>
+                <p class="card-title" id='part_of_speech'>Part Of Speech: {{word.part_of_speech}}</p>
+                <p class="card-text" id='definition'>Definition: {{word.definition}}</p>
+              <p class="card-title" id='example'>Example: {{word.example}}</p>
+              <button  class="btn delete" >Remove</button>
+              <!-- <a href="#" class="btn delete">Remove</a> -->
+            </div>
+          </div>
+        {% endfor %}
+
+    </div>
+    <script src="/static/user_list.js"></script>
+
+    {% endblock%}
+
+    <!-- {% for word in list%}
+    <p>{{word.word}}</p>
+    <p>{{word.part_of_speech}}</p>
+    <p>{{word.definition}}</p>
+{% endfor %} -->

@@ -127,7 +127,7 @@ function showWords(res) {
     let span =  `
     <span>
     <h1> ${res.data.word}</h1>
-    <h3>IPA: ${res.data.pronunciation.all}</h3>
+    <h6>IPA: ${res.data.pronunciation.all}</h6>
     </span>
     `
     headerLi.innerHTML = span
@@ -160,7 +160,7 @@ function showRandomWord(res) {
             let IPA = `
 
            <span >
-           <h4> IPA: ${res.pronunciation}</h4>
+           <h6> IPA: ${res.pronunciation}</h6>
            </span>
 
        `
@@ -171,7 +171,7 @@ function showRandomWord(res) {
             let IPA = `
 
            <span >
-           <h4> IPA: ${res.pronunciation.all}</h4>
+           <h6> IPA: ${res.pronunciation.all}</h6>
            </span>
 
        `
@@ -262,7 +262,8 @@ function extractData(results, pronunciation) {
             my_li.classList.add('border', 'm2', 'p-2')
 
     // append to the list:
-    list.appendChild(my_li)
+        list.appendChild(my_li)
+        id++
 
     })
 
@@ -317,12 +318,11 @@ function handleDeleteWord(results, id,flash, pronunciation) {
 }
 
 // ############################################################################################################
-async function makeButton(listElement,id, result, pronunciation, results) {
+async function makeButton(listElement, id, result, pronunciation, results) {
     let data = {"definition": result.definition}
     res = await axios.post('/find-word', data)
     let flash = document.createElement('div')
     let userListBtn = document.createElement('button')
-    console.log(res)
     if (res.statusText == "OK") {
         // button should show delete and has delete eventListener
         userListBtn.innerHTML = 'Remove'
@@ -344,7 +344,7 @@ async function makeButton(listElement,id, result, pronunciation, results) {
     // create a div to flash the user with:
     listElement.append(flash)
     listElement.append(userListBtn)
-    id++
+
     // return {'flash':flash,'btn':userListBtn}
 }
 // ############################################################################################################

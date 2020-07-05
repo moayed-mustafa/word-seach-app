@@ -9,13 +9,33 @@ user_BP = Blueprint('user_blueprint', __name__,
                     template_folder='templates/user',
                     static_folder='static')
 
-@user_BP.route('/list/<int:id>/user')
+@user_BP.route('/profile/<int:id>/user')
 def user_profile(id):
-    return redirect(url_for('user_blueprint.user_search', id=g.user.id))
+    """ serves the page that allows the user to update his/her details """
+    return render_template('user_profile.html')
 # =============================================================================
 
+@user_BP.route('/list/<int:id>/user')
+def user_list(id):
+    """ shows the words the user has chosen to save to their list
+    """
+    user = User.query.get_or_404(id)
+    list = user.words
+    # semon the list of words the user saved
+    # draw them on the template as cards.
+    # each word card should have a button to delete the word
+    # add a js file to perform the deletion
+    # flash the user on delete
+    return render_template('user_list.html', list=list)
+# =============================================================================
 @user_BP.route('/search/<int:id>/user')
 def user_search(id):
+    """ serves the main functionality of the app, searching
+        for a specific word in the english language and returning
+        a bunch of words with the definition, pronunciation
+        part of speech of the word in addition to examples and synonyms of the word.
+
+    """
 
     return render_template('search.html')
 # =============================================================================
@@ -68,7 +88,7 @@ def add_word_to_user_list():
         part_of_speech=data["info"]["partOfSpeech"],
         synonym=syn,
         example=example)
-        print(word)
+        # print(word)
         # add and commit
         db.session.add(word)
         db.session.commit()
@@ -94,6 +114,7 @@ def delete_word_from_user_list():
 
     else:
         definition = request.json['definition']
+        print(definition)
         # get the word by definition
         word = Word.query.filter_by(definition=definition).first()
         print(word)

@@ -39,7 +39,7 @@ def make_user_global():
 def homepage():
 
     if g.user:
-        return redirect(url_for('user_blueprint.user_profile',id=g.user.id))
+        return redirect(url_for('user_blueprint.user_search', id=g.user.id))
 
     return render_template('home.html')
 
