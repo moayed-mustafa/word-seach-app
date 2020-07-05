@@ -14,17 +14,17 @@
 
 ## Visuals:-
  - Home page:
-    [my link] (file://screenshots/home.png)
+    ![image info] (./screenshots/home.png)
  - About page:
-    [my link] (file://screenshots/about.png)
+    ![image info] (./screenshots/about.png)
  - Login page:
-    [my link] (file://screenshots/login.png)
+    ![image info] (./screenshots/login.png)
  - Signup page:
-    [my link] (file://screenshots/signup.png)
+    ![image info] (./screenshots/signup.png)
  - guest search page:
-    [my link] (file://screenshots/guest.png)
+    ![image info] (./screenshots/guest.png)
  - user search page:
-    [my link] (file://screenshots/user.png)
+    ![image info] (./screenshots/user.png)
 
 ## Installation:-
 -   Inside a virtual environment run : pip install -r requirements.txt
