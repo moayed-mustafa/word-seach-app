@@ -40,3 +40,15 @@
     background-color: #d61414;
     color:#f2e9da;
 }
+#word{
+    background-color: #000080;
+}
+#part_of_speech{
+    background-color: #783442;
+}
+#definition{
+    background-color: #0b5f15;
+}
+#example{
+    background-color: #f8bd57;
+}

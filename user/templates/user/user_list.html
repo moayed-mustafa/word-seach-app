@@ -8,19 +8,25 @@
 
     {% block content%}
     <div class="container">
-        <h3>User List of words</h3>
-        {% for word in list%}
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">{{word.word}}</h5>
-                <p class="card-title" id='part_of_speech'>Part Of Speech: {{word.part_of_speech}}</p>
-                <p class="card-text" id='definition'>Definition: {{word.definition}}</p>
-              <p class="card-title" id='example'>Example: {{word.example}}</p>
-              <button  class="btn delete" >Remove</button>
-              <!-- <a href="#" class="btn delete">Remove</a> -->
+        <h3>{{g.user.username}}'s list of words</h3>
+        <div class="row">
+            {% for word in list%}
+            <div class="col-3 m-2">
+                <div class="card text-center" style="width: 18rem;">
+                    <div class="card-body ">
+                        <h5 class="card-title  alert alert-primary" id="word"> {{word.word}}</h5>
+                        <p class="card-title  alert alert-info" id='part_of_speech'>Part of speech: {{word.part_of_speech}}</p>
+                        <p class="card-text  alert alert-success" id='definition'>Definition: {{word.definition}}</p>
+                      <p class="card-title  alert alert-warning" id='example'>Example: {{word.example}}</p>
+                      <button  class="btn delete" >Remove</button>
+                      <!-- <a href="#" class="btn delete">Remove</a> -->
+                    </div>
+                  </div>
+
             </div>
-          </div>
-        {% endfor %}
+            {% endfor %}
+
+        </div>
 
     </div>
     <script src="/static/user_list.js"></script>
