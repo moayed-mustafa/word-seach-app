@@ -16,15 +16,15 @@
  - Home page:
     ![image info] (./screenshots/home.png)
  - About page:
-    ![image info] (./screenshots/about.png)
+    ![image info] (/screenshots/about.png)
  - Login page:
-    ![image info] (./screenshots/login.png)
+    ![image info] (/screenshots/login.png)
  - Signup page:
-    ![image info] (./screenshots/signup.png)
+    ![image info] (/screenshots/signup.png)
  - guest search page:
-    ![image info] (./screenshots/guest.png)
+    ![image info] (/screenshots/guest.png)
  - user search page:
-    ![image info] (./screenshots/user.png)
+    ![image info] (/screenshots/user.png)
 
 ## Installation:-
 -   Inside a virtual environment run : pip install -r requirements.txt

@@ -108,7 +108,6 @@ def add_word_to_user_list():
         return ('Error')
 
     else:
-            # you should be checking if the word already exists though!
 
         data = request.get_json()
 
@@ -121,25 +120,20 @@ def add_word_to_user_list():
             example = Word.example.default.arg
         else:
             example = data["info"]["examples"][0]
-    # add word to db
-    # instanciate the word
+
         word = Word(word=data["word"],
         definition=data["info"]["definition"],
         part_of_speech=data["info"]["partOfSpeech"],
         synonym=syn,
         example=example)
-        # print(word)
-        # add and commit
+
         db.session.add(word)
         db.session.commit()
-        # instantiate the association table
         user_id = g.user.id
         user_word = List(user_id= user_id, word_id=word.id)
         db.session.add(user_word)
 
-        # g.user.words.append(word)
         db.session.commit()
-        print(g.user.words)
         return ('Word created and appended to user list', 201)
 # =============================================================================
 
@@ -154,7 +148,6 @@ def delete_word_from_user_list():
 
     else:
         definition = request.json['definition']
-        print(definition)
         # get the word by definition
         word = Word.query.filter_by(definition=definition).first()
         print(word)
@@ -163,8 +156,13 @@ def delete_word_from_user_list():
             g.user.words.remove(word)
             db.session.delete(word)
             db.session.commit()
-            print(g.user.words)
             return 'Word Removed!'
 
 
         return ('word Not found', 202)
+# =============================================================================
+@user_BP.route('/user-exists')
+def user_or_guest():
+    if g.user:
+        return 'User'
+    return ('Guest', 202)

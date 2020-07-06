@@ -74,17 +74,13 @@ def login_route():
             login(user)
             flash(f'welcome {user.username}', 'success')
 
-            # we should take the user to his profile
             return redirect(url_for('homepage'))
         flash('Invalid credintials', 'danger')
-
     return render_template('/login.html', form=form)
 
 # ===============================================================================================
 @auth_BP.route('/logout')
 def logout_route():
-    # import pdb
-    # pdb.set_trace()
     if  not g.user:
         flash('You need to login first', 'warning')
         return redirect(url_for('auth_blueprint.login_route'))

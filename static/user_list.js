@@ -11,6 +11,10 @@ flash = document.getElementById('flash')
 
 // functions that works with HTML Elements
 async function RemoveWordFromList() {
+         /**
+ * [sends a request to my api for deleting a word from the user's list]
+ * @return {[type]}      [no return value]
+ */
     def = findSibling(this, '#definition')
     element = this
     if (def) {
@@ -48,6 +52,13 @@ async function RemoveWordFromList() {
 // ############################################################################################################
 // traverse the dom
 function findSibling(ele, selector) {
+         /**
+ * [finds a sibling with a specific selector]
+
+ * @param  {[DOM Element]} ele [the element that is the starting point]
+ * @param  {[String]} selector [the selector for the element I wish to find]
+ * @return {[type]}      [no return value]
+ */
     " Traverses the dom to find the sibling that matches the selector "
     sibling = ele.previousElementSibling
     if (!selector) return null
@@ -59,13 +70,33 @@ function findSibling(ele, selector) {
 // ############################################################################################################
 // remove parents
 function removeParent(ele) {
-    ele.parentElement.remove()
-    window.location.reload()
-
+/**
+ * [removes a parent of a specific element]
+ * @param  {[DOM Element]} ele [the element I wish to remove its parent]
+ * @return {[type]}      [no return value]
+    */
+   ele.parentElement.remove()
+    reloadPage()
 }
 // ############################################################################################################
+function reloadPage() {
+/**
+ * [reloads the page]
+ * @return {[type]}      [no return value]
+*/
+    window.location.reload()
+}
+
+// ############################################################################################################
         // flashTheUser
-function flashTheUser( msg, cat) {
+function flashTheUser(msg, cat) {
+/**
+ * [flashes the user]
+
+ * @param  {[String]} msg  [the msg that is showen to the user]
+ * @param  {[String]} cat [a category calss to style the flash div]
+ * @return {[type]}      [no return value]
+*/
     setTimeout(function () {
         flash.classList.add('alert', `alert-${cat}`)
         flash.innerHTML = msg
@@ -75,6 +106,11 @@ function flashTheUser( msg, cat) {
 
 }
 function removeFlash(cat) {
+    /**
+ * [removes the flashe from the screen]
+ * @param  {[String]} cat [a category calss to style the flash div]
+ * @return {[type]}      [no return value]
+*/
         flash.innerHTML = ''
         flash.classList.remove('alert', `alert-${cat}`)
 }

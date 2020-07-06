@@ -25,10 +25,7 @@ let HEADERS =  {
     "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
     "x-rapidapi-key": "82d62a047fmsh74091241e57a04fp1b7385jsn57e8b551a5c6"
 }
-currentUrl = window.location.href
-// you can instead of donig this, just check if user is included here because of the ? that shows up sometimes
-guest_user =  currentUrl.slice(currentUrl.length-4,currentUrl.length )
-console.log(guest_user)
+
 
 
 
@@ -38,15 +35,36 @@ console.log(guest_user)
                                         //###### Functions   #####
                                         //#########################
 
+// ############################################################################################################
+async function UserExists() {
+/**
+ * [ send a user request to my api and checks if the user is logged in or not, fills the localstorage accordingly]
+ * * @return {[type]}      [no return value]
+ */
+    let res = await axios.get('/user-exists')
+    if (res.status == 200) {
+        localStorage.setItem('userOrGuest', 'user')
+    }
+    else if (res.status == 202) {
+        localStorage.setItem('userOrGuest', 'guest')
+    }
+}
+// userExists()
+// ############################################################################################################
 
 async function fetchWord(e) {
-    // Fetchs a word defenition entered by the user.
+ /**
+ * [send a request to the wordsapi to search for the user input, calls a function that handles errors if any, calls the UserExists
+ *  function and showWords which draws the html]
+ * @param  {[event]} e [event parameter to prevent the default form behavior]
+ * @return {[type]}      [no return value]
+ */
+
     e.preventDefault()
 
     // check word.value is not empty
-    if (word.value == '') {
-        handleWordNotEntered(word)
-    }
+    if (word.value == '') { handleWordNotEntered(word) }
+
     else {
         try {
             let res = await axios({
@@ -55,7 +73,10 @@ async function fetchWord(e) {
                 headers:HEADERS,
             })
             // request is successful
-            if (res.status === 200) { showWords(res) }
+            if (res.status === 200) {
+                await UserExists()
+                showWords(res)
+            }
             // request is a failure
         } catch (e) {
             console.log(e)
@@ -67,8 +88,10 @@ async function fetchWord(e) {
 }
 // ############################################################################################################
 async function fetchRandomWord() {
-    // fetches a random word.
-    console.log('fetching random word...')
+/**
+ * [sends a request to wordsapi to search for a random word. ]
+ * * @return {[type]}      [no return value]
+ */    console.log('fetching random word...')
     // for some reason axios won't perform a random word request!!
     var settings = {
         "async": true,
@@ -89,8 +112,11 @@ async function fetchRandomWord() {
 
 // handle word alert
 function handleWordNotEntered() {
-    // handles a submit without entering a word
-    setTimeout(function () {
+
+/**
+ * [Handles the case where the user click's submit without typing a word]
+ * @return {[type]}      [no return value]
+ */    setTimeout(function () {
         let alert = `<div class="alert alert-warning mt-2" role="alert">
                     Must enter a word!
                     </div>`
@@ -103,7 +129,11 @@ function handleWordNotEntered() {
 }
 // ############################################################################################################
 function handleError(message) {
-    // handles server error
+    /**
+ * [handles server error and alerts the user]
+ * @return {[type]}      [no return value]
+ */
+
     setTimeout(function () {
         let alert = `<div class="alert alert-danger mt-2" role="alert">
                     ${message}
@@ -119,6 +149,11 @@ function handleError(message) {
 
 // show words on the screen
 function showWords(res) {
+    /**
+ * [ draws part of the word info on the UI and calls a function that draws the rest]
+ * @param  {[object]} res [ the response object as a result of a successful word fetching ]
+ * @return {[type]}      [no return value]
+ */
     // draws part of the word info on the UI and calls a function that draws the rest
     console.log(res.data)
 
@@ -140,10 +175,13 @@ function showWords(res) {
 }
 // ############################################################################################################
 function showRandomWord(res) {
-    // draws a random word on the UI and calls a function that draws the rest
+       /**
+ * [ draws part of a random word info on the UI and calls a function that draws the rest]
+ * @param  {[object]} res [ the response object as a result of a successful random word fetching ]
+ * @return {[type]}      [no return value]
+ */
     console.log(res)
     clearUL()
-
     let pron = null;
     let span = `
     <span>
@@ -153,27 +191,22 @@ function showRandomWord(res) {
     `
     headerLi.innerHTML = span
     // the api has descrepency in showing the IPA
-    // add pronunciation
     if (typeof(res.pronunciation) == 'string' || typeof(res.pronunciation) == 'object') {
         if (typeof (res.pronunciation) == 'string') {
             pron = res.pronunciation
             let IPA = `
-
            <span >
            <h6> IPA: ${res.pronunciation}</h6>
            </span>
-
        `
            headerLi.innerHTML += IPA
         }
         else if (typeof (res.pronunciation) == 'object') {
             pron = res.pronunciation.all
             let IPA = `
-
            <span >
            <h6> IPA: ${res.pronunciation.all}</h6>
            </span>
-
        `
            headerLi.innerHTML += IPA
         }
@@ -185,7 +218,6 @@ function showRandomWord(res) {
         <span class='d-inline'>
         <h4> IPA not available!</h4>
         </span>
-
     `
     headerLi.innerHTML += noIPA
     }
@@ -195,13 +227,11 @@ function showRandomWord(res) {
         extractData(res.results, pron)
     }
 
-
     else {
         // alert that data is not availabe due to api error
         let noDataLi = document.createElement('li')
         setTimeout(function () {
             let alert = `
-
             <div class="alert alert-danger mt-2" role="alert">
                         API Error, Data not fully Available
                         </div>
@@ -219,7 +249,15 @@ function showRandomWord(res) {
 
 // ############################################################################################################
 function extractData(results, pronunciation) {
-    // does the overlapping html drawing between the random search and ususal search
+    /**
+ * [does the overlapping html drawing between the random search and ususal search]
+ * @param  {[object]} results [all the  results of a fetch]
+ * @param  {[string]} pronunciation [the IPA string from the search, this is only passed here to be passed
+ * down to the makeButton function so it could pass it later to
+ * my api for adding a word or deleting it.]
+ * @return {[type]}      [no return value]
+ */
+    //
     let id =0
     results.forEach( result => {
         // craete an li here and add id to it
@@ -256,8 +294,9 @@ function extractData(results, pronunciation) {
             my_li.innerHTML += synTag
     }
             // add button
-        if (guest_user == 'user') {
-            makeButton(my_li,id, result, pronunciation, results)}
+        isUser = localStorage.getItem('userOrGuest')
+        console.log(isUser)
+        if (isUser == 'user') {makeButton(my_li,id, result, pronunciation, results)}
             // add border
             my_li.classList.add('border', 'm2', 'p-2')
 
@@ -270,9 +309,16 @@ function extractData(results, pronunciation) {
 }
 
 // ############################################################################################################
- handleAddWord  =  function (results, id, flash, pronunciation) {
-    // Had to use currying since my event listener accepts parameters
-     // and I want to remove it in the future.
+handleAddWord = function (results, id, flash, pronunciation) {
+        /**
+ * [sends a request to my api route for adding a word to the user's list]
+ * @param  {[object]} results [all the  results of a fetch]
+ * @param  {[Number]} id [the id of the li that holds the word data]
+ * @param  {[DOM Element]} flash [a div for alerting the user of the addition result ]
+ * @param  {[pronunciation]} string [the IPA string from the search]
+ * @return {[type]}      [no return value]
+ */
+
      return async function curried() {
     data = { 'word': word.value, 'pronunciation': pronunciation, 'info': results[id] }
     let res = await axios.post('/add-word', data)
@@ -295,7 +341,14 @@ function extractData(results, pronunciation) {
 }
 // ############################################################################################################
 function handleDeleteWord(results, id,flash, pronunciation) {
-
+       /**
+ * [sends a request to my api route for deleting a word to the user's list]
+ * @param  {[object]} results [all the  results of a fetch]
+ * @param  {[Number]} id [the id of the li that holds the word data]
+ * @param  {[DOM Element]} flash [a div for alerting the user of the deletions result ]
+ * @param  {[pronunciation]} string [the IPA string from the search]
+ * @return {[type]}      [no return value]
+ */
     return async function curried() {
         definition = {'definition':results[id].definition}
         console.log(results[id],definition)
@@ -319,6 +372,15 @@ function handleDeleteWord(results, id,flash, pronunciation) {
 
 // ############################################################################################################
 async function makeButton(listElement, id, result, pronunciation, results) {
+        /**
+ * [creates the button for either addition or deletion]
+ * @param  {[DOM Element]} listElement [li that holds the words data]
+ * @param  {[Number]} id [the id of the li that holds the word data]
+ * @param  {[object]} result [the specific result that maps to the button id]
+ * @param  {[object]} results [all the  results of a fetch]
+ * @param  {[pronunciation]} string [the IPA string from the search]
+ * @return {[type]}      [no return value]
+ */
     let data = {"definition": result.definition}
     res = await axios.post('/find-word', data)
     let flash = document.createElement('div')
@@ -350,13 +412,20 @@ async function makeButton(listElement, id, result, pronunciation, results) {
 // ############################################################################################################
 
 function clearUL() {
+          /**
+ * [clears the words UL]
+ * @return {[type]}    no return value]
+ */
     // clear up the list
     list.innerHTML = ''
 }
 // ############################################################################################################
 function removeGreeting() {
-    // removees the flash message send by flask after 2.5 seconds
-    let greet = setTimeout(function () {
+         /**
+ * [removes the flash message sent by flask after 2.5 seconds]
+ * @return {[type]}    no return value]
+ */
+    setTimeout(function () {
         flask_flash.innerHTML = ''
         flask_flash.classList.remove('alert')
     }, 2500)
@@ -365,6 +434,14 @@ function removeGreeting() {
 }
 // ############################################################################################################
 function flashUser(flash, cat, msg) {
+        /**
+ * [flashes the user after adding or deleting a word]
+ * @param  {[DOMElement]} flash [div for alerting the user]
+ * @param  {[String]} cat [a string category class to style the flash]
+ * @param  {[String]} msg [the message string shown to the user]
+
+ * @return {[type]}    no return value]
+ */
         setTimeout(function () {
         flash.classList.add('alert', `alert-${cat}`)
         flash.innerHTML = msg

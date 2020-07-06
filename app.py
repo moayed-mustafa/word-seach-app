@@ -31,10 +31,6 @@ def make_user_global():
         g.user = None
 
 
-
-
-
-
 @app.route('/')
 def homepage():
 
