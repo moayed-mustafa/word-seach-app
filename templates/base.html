@@ -34,7 +34,7 @@
                 <!-- this should send the user to the search route -->
                 <a class="nav-link btn btn-warning m-1" href= {{url_for('user_blueprint.user_search', id=g.user.id)}}>Search </a>
                 <!-- this should send the user to the user update route -->
-                <a class="nav-link btn btn-success m-1" href= {{url_for('user_blueprint.user_profile', id=g.user.id)}}>Update User </a>
+                <a class="nav-link btn btn-success m-1" href= {{url_for('user_blueprint.user_profile_edit', id=g.user.id)}}>Update User </a>
                 <!-- this should send the user to the logout route -->
                <a class="nav-link btn btn-success m-1" href={{url_for('auth_blueprint.logout_route')}}>Logout </a>
 

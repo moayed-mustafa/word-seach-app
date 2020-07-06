@@ -8,6 +8,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from auth.auth import auth_BP, CURR_USER_KEY
 from anon.anon import anon_BP
 from user.user import user_BP
+from api.api import api_BP
 from models import db, connect_db, User, Word
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
@@ -17,6 +18,7 @@ app.config.from_object('config.DevelopmentConfig')
 app.register_blueprint(auth_BP)
 app.register_blueprint(anon_BP)
 app.register_blueprint(user_BP)
+app.register_blueprint(api_BP)
 
 connect_db(app)
 
