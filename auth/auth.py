@@ -4,8 +4,11 @@
 from flask import Flask,Blueprint, render_template, request, flash, redirect, session, g, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
-from forms import SignupForm, LoginForm
-from models import User, db, connect_db
+from auth.forms import SignupForm, LoginForm,UserEditForm
+
+from user.user_model import db, connect_db, Word,User
+
+
 
 
 
@@ -19,12 +22,15 @@ auth_BP = Blueprint('auth_blueprint', __name__,
         # Utility methods and variables
 
 def login(user):
+    """ puts the user id in the session for identification  """
     session[CURR_USER_KEY] = user.id
 
 
 def logout():
+    """ removes the user from the session """
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
+
     # use this to make a custome 404 page
 # @app.errorhandler(404)
 # def not_found():
@@ -41,7 +47,6 @@ def signup_route():
         return redirect(url_for('homepage'))
     form = SignupForm()
     if form.validate_on_submit():
-        # cls, username, email, password, image_url, gender
         try:
             user = User.signup(
                 username=form.username.data,
@@ -81,6 +86,7 @@ def login_route():
 # ===============================================================================================
 @auth_BP.route('/logout')
 def logout_route():
+    """ handles logging the user out of the system """
     if  not g.user:
         flash('You need to login first', 'warning')
         return redirect(url_for('auth_blueprint.login_route'))
@@ -89,3 +95,29 @@ def logout_route():
         logout()
         flash('Logged out successfuly', 'success')
         return redirect(url_for('homepage'))
+
+# ===============================================================================================
+
+@auth_BP.route('/profile/<int:id>/user',methods=["GET", "POST"])
+def user_profile_edit(id):
+    """Update profile for current user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect(url_for('homepage'))
+
+    user = g.user
+    form = UserEditForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate(user.username, form.password.data):
+            user.username = form.username.data
+            user.email = form.email.data
+            user.image_url = form.image_url.data
+
+            db.session.commit()
+            flash('User detailshas been updated', 'success')
+            return redirect(url_for('homepage'))
+
+        flash("Wrong password, please try again.", 'danger')
+    return render_template('user_profile.html', form=form)

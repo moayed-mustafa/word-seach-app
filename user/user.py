@@ -3,36 +3,15 @@
 
 from flask import Flask,Blueprint, render_template, request, flash, redirect, session, g, url_for, json
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Word, List
-from forms import UserEditForm
+
+from user.user_model import db, connect_db, Word,User
+
+from auth.forms import UserEditForm
 
 user_BP = Blueprint('user_blueprint', __name__,
                     template_folder='templates/user',
                     static_folder='static')
-# =============================================================================
-        # edit user
-@user_BP.route('/profile/<int:id>/user',methods=["GET", "POST"])
-def user_profile_edit(id):
-    """Update profile for current user."""
 
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect(url_for('homepage'))
-
-    user = g.user
-    form = UserEditForm(obj=user)
-
-    if form.validate_on_submit():
-        if User.authenticate(user.username, form.password.data):
-            user.username = form.username.data
-            user.email = form.email.data
-            user.image_url = form.image_url.data
-
-            db.session.commit()
-            return redirect(url_for('homepage'))
-
-        flash("Wrong password, please try again.", 'danger')
-    return render_template('user_profile.html', form=form)
 # =============================================================================
 
 @user_BP.route('/list/<int:id>/user')

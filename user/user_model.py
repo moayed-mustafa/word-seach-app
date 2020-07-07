@@ -1,10 +1,8 @@
 
-
-
-
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from models import *
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -34,12 +32,13 @@ class User(db.Model):
 
 
     # set a relationship
-    words = db.relationship('Word', secondary="user_words", passive_deletes=True,cascade='all,delete')
-
+    words = db.relationship('Word', secondary="user_words", passive_deletes=True, cascade='all,delete')
 
     def __repr__(self):
         """ a better representation of the Word class """
         return f'{self.id} ||{self.username}'
+
+
     # add a sign up and authenticate methods:
     @classmethod
     def signup(cls, username, password, email, image_url, gender):
@@ -60,8 +59,6 @@ class User(db.Model):
             if is_auth:
                 return user
         return False
-
-
 # =====================================================================================================================
 
     # user model
@@ -91,7 +88,3 @@ class List(db.Model):
     # id = db.Column(db.Integer, primary_key=True)
     user_id =  db.Column(db.Integer,db.ForeignKey('users.id', ondelete="cascade"), primary_key=True)
     word_id =  db.Column(db.Integer,db.ForeignKey('words.id', ondelete="cascade"), primary_key=True)
-# user_words = db.Table('user_words',
-#     db.Column('word_id',db.Integer, db.ForeignKey('users.id', ondelete="cascade")), , primary_key=True
-#     db.Column('user_id',db.Integer,db.ForeignKey('words.id', ondelete="cascade"))
-# )

@@ -9,12 +9,11 @@ from auth.auth import auth_BP, CURR_USER_KEY
 from anon.anon import anon_BP
 from user.user import user_BP
 from api.api import api_BP
-from models import db, connect_db, User, Word
+
+from user.user_model import db, connect_db, Word,User
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
-# if you want to check if your configurations is set, print(app.config)
 
-# register your blueprints here
 app.register_blueprint(auth_BP)
 app.register_blueprint(anon_BP)
 app.register_blueprint(user_BP)
@@ -24,9 +23,9 @@ connect_db(app)
 
 
 
-# add user to the global object
 @app.before_request
 def make_user_global():
+    """ add the user to the global variable """
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
     else:

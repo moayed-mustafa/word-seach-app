@@ -12,7 +12,8 @@
 import os
 from unittest import TestCase
 
-from models import db, User, Word
+# from models import db, User, Word
+from user.user_model import db, Word,User
 
 from sqlalchemy.exc import IntegrityError
 

@@ -1,7 +1,8 @@
 from flask import Flask,Blueprint, render_template, request, flash, redirect, session, g, url_for, json
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Word, List
-# from forms import UserEditForm
+
+from user.user_model import db, connect_db, Word,User, List
+
 
 api_BP = Blueprint('api_blueprint', __name__)
 
@@ -43,7 +44,6 @@ def add_word_to_user_list():
         return ('Word created and appended to user list', 201)
 # =============================================================================
 
-# '/delete-word'
 @api_BP.route('/delete-word', methods=['POST'])
 def delete_word_from_user_list():
     """ recieves a request the word details from the frontEnd and addes the word to
@@ -68,6 +68,7 @@ def delete_word_from_user_list():
 # =============================================================================
 @api_BP.route('/user-exists')
 def user_or_guest():
+    """ determains if there's a user in the global variable or not """
     if g.user:
         return 'User'
     return ('Guest', 202)

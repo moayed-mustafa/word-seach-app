@@ -79,7 +79,6 @@ async function fetchWord(e) {
             }
             // request is a failure
         } catch (e) {
-            console.log(e)
             if (e.response.status == 404) {
                 handleError(e.response.data.message)
             }
@@ -91,7 +90,7 @@ async function fetchRandomWord() {
 /**
  * [sends a request to wordsapi to search for a random word. ]
  * * @return {[type]}      [no return value]
- */    console.log('fetching random word...')
+ */
     // for some reason axios won't perform a random word request!!
     var settings = {
         "async": true,
@@ -154,8 +153,7 @@ function showWords(res) {
  * @param  {[object]} res [ the response object as a result of a successful word fetching ]
  * @return {[type]}      [no return value]
  */
-    // draws part of the word info on the UI and calls a function that draws the rest
-    console.log(res.data)
+
 
     clearUL()
 
@@ -180,7 +178,7 @@ function showRandomWord(res) {
  * @param  {[object]} res [ the response object as a result of a successful random word fetching ]
  * @return {[type]}      [no return value]
  */
-    console.log(res)
+
     clearUL()
     let pron = null;
     let span = `
@@ -232,7 +230,7 @@ function showRandomWord(res) {
         let noDataLi = document.createElement('li')
         setTimeout(function () {
             let alert = `
-            <div class="alert alert-danger mt-2" role="alert">
+            <div class="alert alert-warning mt-2" role="alert">
                         API Error, Data not fully Available
                         </div>
             `
@@ -321,7 +319,7 @@ handleAddWord = function (results, id, flash, pronunciation) {
          data = { 'word': word.value, 'pronunciation': pronunciation, 'info': results[id] }
 
         let res = await axios.post('/add-word', data)
-        console.log(data)
+
         if (res.status == 201) {
             //  flash the user
              flashUser(flash, 'success', 'Word added to list!')
@@ -351,14 +349,14 @@ function handleDeleteWord(results, id,flash, pronunciation) {
  */
     return async function curried() {
         definition = {'definition':results[id].definition}
-        console.log(results[id],definition)
+
 
         let res = await axios.post('/delete-word', definition)
-        console.log(res)
+
         if (res.status != 202) {
             btn = document.getElementById(id)
             btn.removeEventListener('click', curried)
-            flashUser(flash, 'danger', 'Word Removed from list!')
+            flashUser(flash, 'success', 'Word Removed from list!')
             btn.innerHTML = 'Add'
             btn.classList.remove('delete')
             btn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )

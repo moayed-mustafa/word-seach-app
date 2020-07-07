@@ -2,7 +2,9 @@
 
 
 """ seed some data into the database """
-from models import User, Word, db, connect_db
+# from models import User, Word, db, connect_db
+from user.user_model import db, connect_db, Word,User
+
 from app import app
 
 db.drop_all()
