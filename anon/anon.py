@@ -13,4 +13,5 @@ anon_BP = Blueprint('anon_blueprint', __name__,
 
 @anon_BP.route('/anon')
 def anon_search():
+    """ sends a guest user to the search page """
     return render_template('search.html')

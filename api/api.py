@@ -56,7 +56,6 @@ def delete_word_from_user_list():
         definition = request.json['definition']
         # get the word by definition
         word = Word.query.filter_by(definition=definition).first()
-        print(word)
         if word and word in g.user.words:
             # db.session.delete(word)
             g.user.words.remove(word)

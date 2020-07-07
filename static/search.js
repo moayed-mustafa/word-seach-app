@@ -295,7 +295,6 @@ function extractData(results, pronunciation) {
     }
             // add button
         isUser = localStorage.getItem('userOrGuest')
-        console.log(isUser)
         if (isUser == 'user') {makeButton(my_li,id, result, pronunciation, results)}
             // add border
             my_li.classList.add('border', 'm2', 'p-2')
@@ -318,11 +317,12 @@ handleAddWord = function (results, id, flash, pronunciation) {
  * @param  {[pronunciation]} string [the IPA string from the search]
  * @return {[type]}      [no return value]
  */
+    return async function curried() {
+         data = { 'word': word.value, 'pronunciation': pronunciation, 'info': results[id] }
 
-     return async function curried() {
-    data = { 'word': word.value, 'pronunciation': pronunciation, 'info': results[id] }
-    let res = await axios.post('/add-word', data)
-         if (res.status == 201) {
+        let res = await axios.post('/add-word', data)
+        console.log(data)
+        if (res.status == 201) {
             //  flash the user
              flashUser(flash, 'success', 'Word added to list!')
 

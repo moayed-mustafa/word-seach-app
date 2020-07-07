@@ -35,6 +35,7 @@ def make_user_global():
 
 @app.route('/')
 def homepage():
+    """ shows home page """
 
     if g.user:
         return redirect(url_for('user_blueprint.user_search', id=g.user.id))
@@ -44,6 +45,7 @@ def homepage():
 # =============================================================================
 @app.route('/about')
 def about():
+    """ shows the about page """
     return render_template('about.html')
 
 

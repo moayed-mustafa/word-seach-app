@@ -1,3 +1,12 @@
+html{
+    height: 100%;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .btn-primary{
     background-color: #000080;
     color:	white
@@ -51,4 +60,9 @@
 }
 #example{
     background-color: #f8bd57;
+}
+
+#footer{
+    margin-top:auto;
+
 }

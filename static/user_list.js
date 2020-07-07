@@ -1,6 +1,5 @@
 // Get the delete button:
 remove_word = document.querySelectorAll('.delete')
-console.log(remove_word)
 remove_word.forEach(btn => {
     // hook the button with the function
     btn.addEventListener('click', RemoveWordFromList)
