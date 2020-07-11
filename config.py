@@ -1,6 +1,5 @@
 # import stuff
 import os
-from secret import secret
 class Config(object):
     DEBUG = False
     TESTING = True
