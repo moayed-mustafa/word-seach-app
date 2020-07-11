@@ -1,10 +1,11 @@
 # import stuff
 import os
+from app import app
 class Config(object):
     DEBUG = False
     TESTING = True
     CSRF_ENABLED = True
-    SECRET_KEY = 'secret'
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY','secret')
     # my database name: word-search-db
     # Get DB_URI from environ variable (useful for production/testing) or,
     # if not set there, use development local db.
