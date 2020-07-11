@@ -49,6 +49,9 @@ body{
     background-color: #d61414;
     color:#f2e9da;
 }
+.alert{
+    transition: all ease-in-out 1s;
+}
 #word{
     background-color: #000080;
 }

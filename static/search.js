@@ -84,6 +84,7 @@ async function fetchWord(e) {
             }
         }
     }
+    form.reset()
 }
 // ############################################################################################################
 async function fetchRandomWord() {
@@ -169,10 +170,11 @@ function showWords(res) {
     list.appendChild(headerLi)
     // package word and pronuncitation in an object to send with the results
 
-    extractData(res.data.results, res.data.pronunciation.all)
+    extractData(res.data.results, res.data.pronunciation.all, res.data.word)
 }
 // ############################################################################################################
 function showRandomWord(res) {
+
        /**
  * [ draws part of a random word info on the UI and calls a function that draws the rest]
  * @param  {[object]} res [ the response object as a result of a successful random word fetching ]
@@ -222,11 +224,11 @@ function showRandomWord(res) {
     list.appendChild(headerLi)
 
     if (res.results) {
-        extractData(res.results, pron)
+        console.log(res.results)
+        extractData(res.results, pron, res.word)
     }
 
     else {
-        // alert that data is not availabe due to api error
         let noDataLi = document.createElement('li')
         setTimeout(function () {
             let alert = `
@@ -237,7 +239,6 @@ function showRandomWord(res) {
             noDataLi.innerHTML = alert
             list.append(noDataLi)
             }, 100)
-            // clear the alert after 2 sec
             setTimeout(function () {
                 noDataLi.innerHTML = ''
             }, 5000)
@@ -246,18 +247,19 @@ function showRandomWord(res) {
 }
 
 // ############################################################################################################
-function extractData(results, pronunciation) {
+function extractData(results, pronunciation, word) {
     /**
  * [does the overlapping html drawing between the random search and ususal search]
  * @param  {[object]} results [all the  results of a fetch]
  * @param  {[string]} pronunciation [the IPA string from the search, this is only passed here to be passed
  * down to the makeButton function so it could pass it later to
  * my api for adding a word or deleting it.]
+ * @param  {[word]} string [the word from the search]
  * @return {[type]}      [no return value]
  */
     //
     let id =0
-    results.forEach( result => {
+    results.forEach(result => {
         // craete an li here and add id to it
     my_li = document.createElement('li')
 
@@ -293,7 +295,7 @@ function extractData(results, pronunciation) {
     }
             // add button
         isUser = localStorage.getItem('userOrGuest')
-        if (isUser == 'user') {makeButton(my_li,id, result, pronunciation, results)}
+        if (isUser == 'user') {makeButton(my_li,id, result, pronunciation, results, word)}
             // add border
             my_li.classList.add('border', 'm2', 'p-2')
 
@@ -306,23 +308,24 @@ function extractData(results, pronunciation) {
 }
 
 // ############################################################################################################
-handleAddWord = function (results, id, flash, pronunciation) {
+handleAddWord = function (results, id, flash, pronunciation, word) {
         /**
  * [sends a request to my api route for adding a word to the user's list]
  * @param  {[object]} results [all the  results of a fetch]
  * @param  {[Number]} id [the id of the li that holds the word data]
  * @param  {[DOM Element]} flash [a div for alerting the user of the addition result ]
  * @param  {[pronunciation]} string [the IPA string from the search]
+ * @param  {[word]} string [the word from the search]
  * @return {[type]}      [no return value]
  */
     return async function curried() {
-         data = { 'word': word.value, 'pronunciation': pronunciation, 'info': results[id] }
+         data = { 'word': word, 'pronunciation': pronunciation, 'info': results[id] }
 
         let res = await axios.post('/add-word', data)
 
         if (res.status == 201) {
             //  flash the user
-             flashUser(flash, 'success', 'Word added to list!')
+             flashUser(flash, 'success', 'Word added to list! ✔︎')
 
         btn = document.getElementById(id)
         // remove the event listener
@@ -338,13 +341,14 @@ handleAddWord = function (results, id, flash, pronunciation) {
 
 }
 // ############################################################################################################
-function handleDeleteWord(results, id,flash, pronunciation) {
+function handleDeleteWord(results, id,flash, pronunciation, word) {
        /**
  * [sends a request to my api route for deleting a word to the user's list]
  * @param  {[object]} results [all the  results of a fetch]
  * @param  {[Number]} id [the id of the li that holds the word data]
  * @param  {[DOM Element]} flash [a div for alerting the user of the deletions result ]
  * @param  {[pronunciation]} string [the IPA string from the search]
+ * @param  {[word]} string [the word from the search
  * @return {[type]}      [no return value]
  */
     return async function curried() {
@@ -356,10 +360,10 @@ function handleDeleteWord(results, id,flash, pronunciation) {
         if (res.status != 202) {
             btn = document.getElementById(id)
             btn.removeEventListener('click', curried)
-            flashUser(flash, 'success', 'Word Removed from list!')
+            flashUser(flash, 'success', 'Word Removed from list! ✘')
             btn.innerHTML = 'Add'
             btn.classList.remove('delete')
-            btn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )
+            btn.addEventListener('click',handleAddWord(results, id, flash, pronunciation, word) )
         }
         else {
             flashUser(flash, 'danger',res.statusText)
@@ -369,7 +373,7 @@ function handleDeleteWord(results, id,flash, pronunciation) {
 }
 
 // ############################################################################################################
-async function makeButton(listElement, id, result, pronunciation, results) {
+async function makeButton(listElement, id, result, pronunciation, results, word) {
         /**
  * [creates the button for either addition or deletion]
  * @param  {[DOM Element]} listElement [li that holds the words data]
@@ -377,6 +381,7 @@ async function makeButton(listElement, id, result, pronunciation, results) {
  * @param  {[object]} result [the specific result that maps to the button id]
  * @param  {[object]} results [all the  results of a fetch]
  * @param  {[pronunciation]} string [the IPA string from the search]
+ * @param  {[word]} string [the word from the search]
  * @return {[type]}      [no return value]
  */
     let data = {"definition": result.definition}
@@ -388,7 +393,7 @@ async function makeButton(listElement, id, result, pronunciation, results) {
         userListBtn.innerHTML = 'Remove'
         userListBtn.setAttribute('id', id)
         userListBtn.classList.add('btn', 'btn-warning','delete')
-        userListBtn.addEventListener('click',handleDeleteWord(results, id, flash, pronunciation) )
+        userListBtn.addEventListener('click',handleDeleteWord(results, id, flash, pronunciation, word) )
 
     }
     else {
@@ -397,7 +402,7 @@ async function makeButton(listElement, id, result, pronunciation, results) {
 
         userListBtn.classList.add('btn', 'btn-warning')
 
-        userListBtn.addEventListener('click',handleAddWord(results, id, flash, pronunciation) )
+        userListBtn.addEventListener('click',handleAddWord(results, id, flash, pronunciation, word) )
 
     }
 

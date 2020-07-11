@@ -2,7 +2,7 @@
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
-from models import *
+# from models import *
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
