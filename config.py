@@ -9,7 +9,7 @@ class Config(object):
     # my database name: word-search-db
     # Get DB_URI from environ variable (useful for production/testing) or,
     # if not set there, use development local db.
-    SQLALCHEMY_DATABASE_URI = 'postgres:///word-search-db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','postgres:///word-search-db')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
