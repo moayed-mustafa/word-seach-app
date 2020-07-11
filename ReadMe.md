@@ -14,7 +14,7 @@
 
 ## Visuals:-
  - Home page:
-    ![] (/screenshots/homepage.png)
+    ![alt text] (/screenshots/homepage.png)
  - About page:
     ![] (/screenshots/about.png)
  - Login page:
