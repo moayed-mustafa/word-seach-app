@@ -291,18 +291,14 @@ function extractData(results, pronunciation, word) {
             Synonyms :<b> ${syns}</b>.
             </p>
                 `
-            my_li.innerHTML += synTag
+        my_li.innerHTML += synTag
     }
             // add button
         isUser = localStorage.getItem('userOrGuest')
         if (isUser == 'user') {makeButton(my_li,id, result, pronunciation, results, word)}
-            // add border
-            my_li.classList.add('border', 'm2', 'p-2')
-
-    // append to the list:
+        my_li.classList.add('border', 'm2', 'p-2')
         list.appendChild(my_li)
         id++
-
     })
 
 }
@@ -334,7 +330,6 @@ handleAddWord = function (results, id, flash, pronunciation, word) {
         btn.addEventListener('click', handleDeleteWord(results, id, flash, pronunciation))
         btn.innerHTML = 'Remove'
         btn.classList.add('btn', 'delete')
-        // build the delete route
     }
 }
 
@@ -409,13 +404,11 @@ async function makeButton(listElement, id, result, pronunciation, results, word)
     // create a div to flash the user with:
     listElement.append(flash)
     listElement.append(userListBtn)
-
-    // return {'flash':flash,'btn':userListBtn}
 }
 // ############################################################################################################
 
 function clearUL() {
-          /**
+/**
  * [clears the words UL]
  * @return {[type]}    no return value]
  */
@@ -424,7 +417,7 @@ function clearUL() {
 }
 // ############################################################################################################
 function removeGreeting() {
-         /**
+/**
  * [removes the flash message sent by flask after 2.5 seconds]
  * @return {[type]}    no return value]
  */

@@ -10,7 +10,7 @@ flash = document.getElementById('flash')
 
 // functions that works with HTML Elements
 async function RemoveWordFromList() {
-         /**
+/**
  * [sends a request to my api for deleting a word from the user's list]
  * @return {[type]}      [no return value]
  */
@@ -49,9 +49,8 @@ async function RemoveWordFromList() {
 
 }
 // ############################################################################################################
-// traverse the dom
 function findSibling(ele, selector) {
-         /**
+/**
  * [finds a sibling with a specific selector]
 
  * @param  {[DOM Element]} ele [the element that is the starting point]
@@ -67,13 +66,12 @@ function findSibling(ele, selector) {
     }
 }
 // ############################################################################################################
-// remove parents
 function removeParent(ele) {
 /**
  * [removes a parent of a specific element]
  * @param  {[DOM Element]} ele [the element I wish to remove its parent]
  * @return {[type]}      [no return value]
-    */
+*/
    ele.parentElement.remove()
     reloadPage()
 }
@@ -91,7 +89,6 @@ function reloadPage() {
 function flashTheUser(msg, cat) {
 /**
  * [flashes the user]
-
  * @param  {[String]} msg  [the msg that is showen to the user]
  * @param  {[String]} cat [a category calss to style the flash div]
  * @return {[type]}      [no return value]
@@ -101,11 +98,9 @@ function flashTheUser(msg, cat) {
         flash.innerHTML = msg
 
     }, 500)
-
-
 }
 function removeFlash(cat) {
-    /**
+/**
  * [removes the flashe from the screen]
  * @param  {[String]} cat [a category calss to style the flash div]
  * @return {[type]}      [no return value]
