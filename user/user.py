@@ -20,8 +20,10 @@ def user_list(id):
     """
     user = User.query.get_or_404(id)
     list = user.words
+    list.sort(key=lambda x: x.word, reverse=False)
+    new_list = sorted(list, key=lambda x: x.word, reverse=False)
 
-    return render_template('user_list.html', list=list)
+    return render_template('user_list.html', list=new_list)
 # =============================================================================
 @user_BP.route('/search/<int:id>/user')
 def user_search(id):

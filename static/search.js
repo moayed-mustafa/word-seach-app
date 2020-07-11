@@ -446,7 +446,7 @@ function flashUser(flash, cat, msg) {
     setTimeout(function () {
         flash.innerHTML = ''
         flash.classList.remove('alert', `alert-${cat}`)
-    },5000)
+    },3000)
 }
 // ############################################################################################################
 
