@@ -14,9 +14,9 @@
 
 ## Visuals:-
  - Home page:
-    ![alt text] (/screenshots/homepage.png)
+    [/screenshots/homepage.png]
  - About page:
-    ![] (/screenshots/about.png)
+    [/screenshots/about.png]
  - Login page:
     ![] (/screenshots/login.png)
  - Signup page:
@@ -32,7 +32,7 @@
 
 ## Project:-
 - The word search app is the first capstone projects
-  for [a link] (https:www.springboard.com) software engineering programe.
+  for https:www.springboard.com software engineering programe.
 ## Installation:-
 -   Inside a virtual environment run : pip install -r requirements.txt
 
