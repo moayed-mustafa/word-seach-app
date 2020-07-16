@@ -3,9 +3,6 @@
 
 """
 
-# run these tests like:
-# make sure you are in test directory
-#    python -m unittest test_auth_routes.py
 
 
 
@@ -39,6 +36,7 @@ class UserAuthTestCase(TestCase):
 
     def setUp(self):
         """ create a user to use for testing """
+        db.session.rollback()
         User.query.delete()
         self.user = User.signup(username='test_user',
                     password='thisismypasswordanditspassword',

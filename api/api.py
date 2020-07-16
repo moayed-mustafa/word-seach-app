@@ -81,6 +81,7 @@ def find_word_in_user_list():
     in the user's list if a word with such definition exists
     """
     data = request.get_json()
+    print(data)
     word = Word.query.filter(Word.definition==data['definition']).first()
     if word != None and word in g.user.words:
         return 'Found'

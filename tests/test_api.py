@@ -3,9 +3,7 @@
 
 """
 
-# run these tests like:
-# make sure you are in test directory
-#    python -m unittest test_api.py
+
 
 
 
@@ -68,10 +66,12 @@ class TestApi(TestCase):
         with self.client as client:
             with client.session_transaction() as sess:
                 sess[CURR_USER_KEY] = self.user.id
+
             url = '/delete-word'
             res = client.post(url, json={'definition': self.word.definition})
             # Assert
-            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.status_code, 202)
+            self.assertEqual(res.data , 'Word Removed!')
 
             # word does not exist
             res = client.post(url, json={'definition': 'a game played with a ball and a net'})
@@ -103,6 +103,8 @@ class TestApi(TestCase):
             with client.session_transaction() as sess:
                 sess[CURR_USER_KEY] = self.user.id
             url = '/find-word'
-            res = client.post(url, data={'definition', self.word.definition})
+            data={'definition': self.word.definition}
+            res = client.post(url, data)
             # Assert
+            # print(res)
             self.assertEqual(res.status_code, 202)

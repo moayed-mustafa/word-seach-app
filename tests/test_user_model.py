@@ -1,8 +1,6 @@
 """User model tests."""
 
-# run these tests like:
-# make sure you are in test directory
-#    python -m unittest test_user_model.py
+
 
 import os
 from unittest import TestCase
@@ -29,19 +27,18 @@ class UserModelTestCase(TestCase):
     def setUp(self):
         """ create a user to use for testing """
         User.query.delete()
-        self.user = User.signup('test_user',
+        self.user = User.signup('the_test_user',
                     'thisismypasswordanditspassword',
                     'test_user.test@email.com',
                     'https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
                     'male')
         db.session.add(self.user)
         db.session.commit()
-        # self.client = app.test_client()
     # ==============================================================================================================
     def test_user(self):
         """ test basic crud on user"""
         # there's already a user added, let's check if that is the case:
-        self.assertEqual(self.user.username, 'test_user')
+        self.assertEqual(self.user.username, 'the_test_user')
         # update the username and check if it persists
         self.user.username = 'not_just_test_user'
         db.session.commit()
@@ -50,19 +47,13 @@ class UserModelTestCase(TestCase):
         user = User.query.get(self.user.id)
         self.assertEqual(user.id, self.user.id)
 
-        # delete a usre and check if the deletion was completed
-        # note: delete is not working for some reason!
-        # User.query.delete()
-        # db.session.commit()
 
-        # self.assertIsNone(self.user)
-        # self.assertIsInstance(self.user, User)
 # ==============================================================================================================
     def test_authentication(self):
             """ test user authentication"""
         # user authenticate correctly
-            authenticated = User.authenticate("test_user", 'thisismypasswordanditspassword')
-            user = User.query.filter_by(username="test_user").first()
+            authenticated = User.authenticate("the_test_user", 'thisismypasswordanditspassword')
+            user = User.query.filter_by(username="the_test_user").first()
             self.assertEqual(user, authenticated)
             # user not authenticate because  the password is invalid
             authenticated = User.authenticate("test_user", "thisispassword")
@@ -76,17 +67,17 @@ class UserModelTestCase(TestCase):
     def test_user_signup_valid(self):
         """ tests the signup class method """
         # user signed up correctly
-        signup_user_test= User.signup('signup_test_user',
+        signup_user_test= User.signup('signup_user',
                     'thisismypasswordanditspasswordsignup',
-                    'test_user_signup.test@email.com',
+                    'signup.test@email.com',
                     'https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
                     'male')
         db.session.add(signup_user_test)
         db.session.commit()
-        user_test = User.query.filter_by(username='signup_test_user').first()
+        user_test = User.query.filter_by(username='signup_user').first()
         self.assertIsNotNone(user_test)
-        self.assertEqual(user_test.username, 'signup_test_user')
-        self.assertEqual(user_test.email, 'test_user_signup.test@email.com')
+        self.assertEqual(user_test.username, 'signup_user')
+        self.assertEqual(user_test.email, 'signup.test@email.com')
         self.assertNotEqual(user_test.password, 'thisismypasswordanditspasswordsignup')
         # bcrypt should start with $2b$
         self.assertTrue(user_test.password.startswith('$2b$'))

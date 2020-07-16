@@ -14,25 +14,35 @@
 
 ## Visuals:-
  - Home page:
-    [/screenshots/homepage.png]
+   - (screenshots/homepage.png)
  - About page:
-    [/screenshots/about.png]
+    - (screenshots/about.png)
  - Login page:
-    ![] (/screenshots/login.png)
+    - (screenshots/login.png)
  - Signup page:
-    ![] (/screenshots/signup.png)
+    - (screenshots/signup.png)
  - Update user page:
-    ![] (/screenshots/signup.png)
+    - (screenshots/signup.png)
  - Guest search page:
-    ![] (/screenshots/guest-word-search.png)
+    - (screenshots/guest-word-search.png)
  - User search page:
-    ![] (/screenshots/word-search.png)
+    - (screenshots/word-search.png)
  - User words list page:
-    ![] (/screenshots/user-words-list.png)
+    - (screenshots/user-words-list.png)
 
 ## Project:-
-- The word search app is the first capstone projects
+- The word search app is the first capstone project
   for https:www.springboard.com software engineering programe.
 ## Installation:-
--   Inside a virtual environment run : pip install -r requirements.txt
+- To install the code locally:-
+   - Create a virtual environment in the root of the project : python -m venv venv
+   - Activate the virtual environment on a mac : source venv/bin/activate
+   - Activate the virtual environment on windows :  venv/Scripts/activate.bat
+   - Inside a virtual environment run : pip install -r requirements.txt
+
+- Create an empty postgresql database using the following command on terminal :-
+   -    createdb word-search-db
+- Run seed.py on terminal using python3 seed.py to create the tables and some data.
+- To run the tests files either run all tests using : python -m unittest , or python -m unittest name of the test script.py.
+e.g. python -m unittest test_api.py
 
