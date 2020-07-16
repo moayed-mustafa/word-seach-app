@@ -14,21 +14,21 @@
 
 ## Visuals:-
  - Home page:
-   - [](screenshots/homepage.png)
+![Alt text](screenshots/homepage.png)
  - About page:
-    - (screenshots/about.png)
+   ![Alt text](screenshots/about.png)
  - Login page:
-    - (screenshots/login.png)
+    ![Alt text](screenshots/login.png)
  - Signup page:
-    - (screenshots/signup.png)
+    ![Alt text](screenshots/signup.png)
  - Update user page:
-    - (screenshots/signup.png)
+    ![Alt text](screenshots/signup.png)
  - Guest search page:
-    - (screenshots/guest-word-search.png)
+    ![Alt text](screenshots/guest-word-search.png)
  - User search page:
-    - (screenshots/word-search.png)
+    ![Alt text](screenshots/word-search.png)
  - User words list page:
-    - (screenshots/user-words-list.png)
+    ![Alt text](screenshots/user-words-list.png)
 
 ## Project:-
 - The word search app is the first capstone project
