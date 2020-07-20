@@ -38,7 +38,7 @@ class TestApi(TestCase):
                     image_url='https://images.unsplash.com/photo-1543109740-4bdb38fda756?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
                     gender='male')
         db.session.add(self.user)
-        db.session.commit()
+
 
         # make a testword:
         self.word = Word(word='blue', definition="of the color intermediate between green and violet; having a color similar to that of a clear unclouded sky",
@@ -46,7 +46,11 @@ class TestApi(TestCase):
         db.session.add(self.word)
         self.user.words.append(self.word)
 
+        db.session.commit()
         self.client = app.test_client()
+
+    def tearDown(self):
+        db.session.rollback()
 # ===================================================================================================
     def test_add_word(self):
         with self.client as client:
@@ -63,19 +67,22 @@ class TestApi(TestCase):
             self.assertEqual(res.json, None)
 # ===================================================================================================
     def test_delete_word(self):
+        definition = self.word.definition
         with self.client as client:
             with client.session_transaction() as sess:
                 sess[CURR_USER_KEY] = self.user.id
 
             url = '/delete-word'
-            res = client.post(url, json={'definition': self.word.definition})
+            res = client.post(url, json={'definition': definition})
             # Assert
-            self.assertEqual(res.status_code, 202)
-            self.assertEqual(res.data , 'Word Removed!')
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.data , b'Word Removed!')
 
             # word does not exist
             res = client.post(url, json={'definition': 'a game played with a ball and a net'})
             self.assertEqual(res.status_code, 202)
+
+
 
 # ===================================================================================================
     def test_find_user(self):
@@ -99,12 +106,13 @@ class TestApi(TestCase):
 # ===================================================================================================
     def test_find_word_in_user_list(self):
         # with user
+        definition = self.word.definition
         with self.client as client:
             with client.session_transaction() as sess:
                 sess[CURR_USER_KEY] = self.user.id
             url = '/find-word'
-            data={'definition': self.word.definition}
-            res = client.post(url, data)
+            data={'definition': definition}
+            res = client.post(url, json=data)
             # Assert
             # print(res)
-            self.assertEqual(res.status_code, 202)
+            self.assertEqual(res.status_code, 200)

@@ -55,6 +55,10 @@
 - Create an empty postgresql database using the following command on terminal :-
    -    createdb word-search-db
 - Run seed.py on terminal using python3 seed.py to create the tables and some data.
+- Create an empty database for running test files and call it word-search-test
+- All test files are written in unittest, install it likewise: pip install unittest2
 - To run the tests files either run all tests using : python -m unittest , or python -m unittest name of the test script.py.
-e.g. python -m unittest test_api.py
+- e.g. from the project root: python -m unittest tests/test_api.py
+- e.g. from the tests directory: python -m unittest test_api.py
+
 

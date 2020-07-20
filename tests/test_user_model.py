@@ -34,6 +34,9 @@ class UserModelTestCase(TestCase):
                     'male')
         db.session.add(self.user)
         db.session.commit()
+
+    def tearDown(self):
+        db.session.rollback()
     # ==============================================================================================================
     def test_user(self):
         """ test basic crud on user"""
